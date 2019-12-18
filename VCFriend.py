@@ -254,7 +254,9 @@ class samp_compApp():
 		else:
 			samples = Samples.split(',')
 
+
 		ex_list = []
+
 
 		try:	
 			ex_samples = Exclude.split(',')
