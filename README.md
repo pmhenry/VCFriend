@@ -3,7 +3,7 @@ VCFriend.py
 ####################
 
 DESCRIPTION:
-	Variant calling softwares utilize VCF files that can sometimes be difficult to parse. VCFriend is a package of tools that can make analyzing and extracting information from VCF files easier.
+	Variant calling softwares utilize VCF files that can sometimes be difficult to parse. VCFriend is a set of tools that can make analyzing and extracting information from VCF files easier.
 	
 USAGE:
 	python3 VCFriend.py [FUNCTION] [OPTIONS]
