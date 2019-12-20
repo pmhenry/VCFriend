@@ -144,45 +144,21 @@ class pat_matchApp():
 
 		with open(InFile, 'r') as fi:
 			file = fi.readlines()
-			fi.close()
 
-		l = len(file[0].split('\t'))  # length variable for loop below
-		gene_lst = file[0].split('\t')[1:]  # list of gene headers in order given by file
-		
-
-		text_lst = []
-
-		for x in range(1, l):  # parses tab deliminated text file for pattern and generates a list of texts to search 
-			temp = []
-			for line in file:  # splits ever line of file into a list by tabs, assigns each item on each line at a given position to a list
-				number = line.split('\t')[x] 
-				if number == '':
-					temp.append('.')
-				elif number[-1] == '\n':  # removes \n characters
-					temp.append(number[:-1])
-				else:
-					temp.append(number)
-			temp.pop(0)  # removes title of each column 
-			text_lst.append(''.join(temp)) 
-
-		match_lst = []
-		matches = []
-
-		for text in text_lst:  # loop for matching function that compares pattern to each text in the list of texts
-			match_lst.append(pat_matchApp.pat_match(Pattern, text))  # outputs a '1' or '0' and appends to a list 
-
-		# the final result of the above loop is a list of '0's and '1's whose position in the list 
-		# matches the the position of its corresponding gene in the list of genes	
-
-		for x in range(len(gene_lst)):  # indexes list of matches for instances of '1' and extracts the corresponding gene header at the
-		    if match_lst[x] == 1:       # same position in the list of gene headers.  Assigns genes to final lisst (matches) 
-		    	matches.append(gene_lst[x])
-
+		l = len(file[0].split('\t'))  # length variable for loop below	
 
 		with open(OutFile, 'w') as fo:  # creates a new file with every line being a gene header + '\n'
-		    for gene in matches:
-		    	fo.write(gene.strip()+'\n')
-		    fo.close()
+
+			for x in range(1, l):  # parses tab deliminated text file for pattern and generates a list of texts to search 
+				temp = []
+				for y in range(1, len(file)):  # splits ever line of file into a list by tabs, assigns each item on each line at a given position to a list
+					number = file[y].split('\t')[x] 
+					temp.append(number.strip()) 
+
+				result =pat_matchApp.pat_match(Pattern, ''.join(temp))  # outputs a '1' or '0' and appends to a list 
+
+				if result == 1:
+					fo.write(file[0].split('\t')[x].strip() + '\n')
 
 
 class nono_callsApp():
