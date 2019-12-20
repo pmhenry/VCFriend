@@ -80,35 +80,35 @@ class vcf_matApp():
 
 		with open(InFile, 'r') as fi:  # read in VCF file and appends all non-header lines 
 			file = fi.readlines()      # to a list-- 'vcf'. Each item is a new line.
+
+			head_bool = True 
+
 			for line in file:
 				if '##' not in line:
-					vcf.append(line)
-		
-		isolates = vcf[0].split('\t')[9:] # extracts isolate names from VCF. List contains isolate names in order
-		isolates[-1] = isolates[-1][:-1] # removes newline at end of string
-		vcf.pop(0) # removes header from VCF data
-		head = ['']
 
-		for x in range(len(isolates)): # cycles through isolate columns list
-			temp = [isolates[x]]
+					if head_bool == True:
+						isolates = line.split('\t')[9:] # extracts isolate names from VCF. List contains isolate names in order
+						isolates[-1] = isolates[-1][:-1] # removes newline at end of string
+						isolates =list(map(lambda x:[x], isolates)) 
+						head = ['']
+						head_bool = False
 
-			for y in range(len(vcf)):  # cycles through each line in VCF file.
-				temp.append(vcf[y].split('\t')[9+x].split(':')[0].strip())  # takes genotype assignment for isolate on each line
-			
-				if len(head) <= len(vcf):
-					name = str(vcf[y].split('\t')[0])+':'+str(vcf[y].split('\t')[1]) # extracts variants scaffold and position
-					head.append(name) # unique variant name is 'scaffold':'position'
-			
-			snps = '\t'.join(temp)
-			snp_mat.append(snps)  # appends string containing genotype calls separated by tabs  
-		
+					else:
+						name = str(line.split('\t')[0]) + ':' + str(line.split('\t')[1]) # extracts variants scaffold and position
+						head.append(name) # unique variant name is 'scaffold':'position'
+
+						for x in range(len(isolates)): # cycles through isolate columns list
+							temp = isolates[x]
+							temp.append(line.split('\t')[9+x].split(':')[0].strip())  # takes genotype assignment for isolate on each line
+							isolates[x] = temp				
+							
 
 		header = '\t'.join(head) # creates tab separated string containing variant ID's.
 
 		with open(OutFile, 'w') as fo:  # creates tab separated tables where columns are variants and rows are isolate genotypes
-			fo.write(header+'\n')
-			for row in snp_mat:
-				fo.write(row+'\n')
+			fo.write(header + '\n')
+			for row in isolates:
+				fo.write('\t'.join(row) + '\n')
 
 
 class pat_matchApp():
