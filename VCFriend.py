@@ -14,8 +14,7 @@ class removeApp():
 	def __init__(self):
 		self.verbose = False
 
-	def start(self, InFile, Sample, OutFile):
-
+	
 		if InFile == 'Error1':
 			raise Exception('*VCF File Required*')
 		elif Sample == 'Error2':
@@ -28,39 +27,25 @@ class removeApp():
 
 		with open(InFile, 'r') as fi:  # read in VCF file 
 			vcf = fi.readlines()
-			for line in vcf:
-				if '#' in line:
-					hash_lines.append(line)  # appends all header lines to hash_lines list
-				else:
-					var_lines.append(line)  # appends all non-header lines to var_lines list
-
-
-		header = hash_lines[-1]  # takes header lines in vcf file and removes it from original list.
-		hash_lines.remove(hash_lines[-1])
-
-		for x in range(len(header.split('\t'))):  # iterates over list where each item is a column 
-			if header.split('\t')[x] == Sample:   # takes column number that matches sample ID to remove
-				rm_1 = x
-
-		final_vars = []  
-		temp_head = header.split('\t')
-		temp_head.remove(header.split('\t')[rm_1])  # removes isolate from header line 
-		final_head = '\t'.join(temp_head)
-
-
-		for line in var_lines:  # iterates over every line in var_lines list 
-			temp = line.split('\t')  # creates temp list where each item is a column from the VCF file
-			temp.remove(temp[rm_1])  # removes column corresponding to removed sample
-			temp_2 = '\t'.join(temp)
-			final_vars.append(temp_2)
-
 
 		with open(OutFile, 'w') as fo:  # creates file with original hash lines from input VCF.
-			for line in hash_lines:
-				fo.write(line)
-			fo.write(final_head)  # addition of new headers
-			for line in final_vars:
-				fo.write(line)  # addition of new variant lines
+
+			for line in vcf:
+				if '##' in line:
+					fo.write(line)
+				else:
+					if '#' in line:
+						header = line.split('\t')
+						for x in range(9, len(header)):
+							if header[x] == Sample:
+								rm_1 = x # assigns index to remove in future lines
+								header.remove(header[rm_1]) # removes column corresponding to removed sample
+								fo.write('\t'.join(header))
+								break
+					else:
+						temp = line.split('\t')  # creates temp list where each item is a column from the VCF file
+						temp.remove(temp[rm_1])  # removes column corresponding to removed sample
+						fo.write('\t'.join(temp))
 
 
 class vcf_matApp():
