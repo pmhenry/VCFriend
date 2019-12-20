@@ -75,33 +75,31 @@ class vcf_matApp():
 		elif OutFile == 'Error2':
 			raise Exception('*Name for Output File Required*')
 
-		vcf = []
-		snp_mat = []
 
 		with open(InFile, 'r') as fi:  # read in VCF file and appends all non-header lines 
 			file = fi.readlines()      # to a list-- 'vcf'. Each item is a new line.
 
-			head_bool = True 
+		head_bool = True 
 
-			for line in file:
-				if '##' not in line:
+		for line in file:
+			if '##' not in line:
 
-					if head_bool == True:
-						isolates = line.split('\t')[9:] # extracts isolate names from VCF. List contains isolate names in order
-						isolates[-1] = isolates[-1][:-1] # removes newline at end of string
-						isolates =list(map(lambda x:[x], isolates)) 
-						head = ['']
-						head_bool = False
+				if head_bool == True:
+					isolates = line.split('\t')[9:] # extracts isolate names from VCF. List contains isolate names in order
+					isolates[-1] = isolates[-1][:-1] # removes newline at end of string
+					isolates = list(map(lambda x:[x], isolates)) 
+					head = ['']
+					head_bool = False
 
-					else:
-						name = str(line.split('\t')[0]) + ':' + str(line.split('\t')[1]) # extracts variants scaffold and position
-						head.append(name) # unique variant name is 'scaffold':'position'
+				else:
+					name = str(line.split('\t')[0]) + ':' + str(line.split('\t')[1]) # extracts variants scaffold and position
+					head.append(name) # unique variant name is 'scaffold':'position'
 
-						for x in range(len(isolates)): # cycles through isolate columns list
-							temp = isolates[x]
-							temp.append(line.split('\t')[9+x].split(':')[0].strip())  # takes genotype assignment for isolate on each line
-							isolates[x] = temp				
-							
+					for x in range(len(isolates)): # cycles through isolate columns list
+						temp = isolates[x]
+						temp.append(line.split('\t')[9+x].split(':')[0].strip())  # takes genotype assignment for isolate on each line
+						isolates[x] = temp				
+						
 
 		header = '\t'.join(head) # creates tab separated string containing variant ID's.
 
