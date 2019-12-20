@@ -155,7 +155,7 @@ class pat_matchApp():
 					number = file[y].split('\t')[x] 
 					temp.append(number.strip()) 
 
-				result =pat_matchApp.pat_match(Pattern, ''.join(temp))  # outputs a '1' or '0' and appends to a list 
+				result = pat_matchApp.pat_match(Pattern, ''.join(temp))  # outputs a '1' or '0' and appends to a list 
 
 				if result == 1:
 					fo.write(file[0].split('\t')[x].strip() + '\n')
@@ -178,33 +178,17 @@ class nono_callsApp():
 
 		with open(InFile, 'r') as fi: # reads in VCF table file 
 			vcf = fi.readlines()  
-			for line in vcf:
-				if '#' in line:
-					hash_lines.append(line)  # appends all header lines to hash_lines list
-				else:
-					var_lines.append(line)  # appends all non-header lines to var_lines list
-		
-
-		no_calls = []
-
-		for x in range(len(var_lines)):  # iterates over all lines in var_lines list  
-			for y in range(9, len(var_lines[0].split('\t'))):  # iterates over every volumn in every variant line
-				if '.' in var_lines[x].split('\t')[y][0]: 
-					no_calls.append(x)  # adds line # to no_calls list if no genotype call is detected
-					break
-
-		no_calls = list(dict.fromkeys(no_calls))  # reverses order of lines in list 
-		no_calls.sort(reverse=True)
-
-
-		for site in no_calls:  # iterates over no_calls list and deletes the corresponding line in var_lines list
-			del var_lines[site]
 
 		with open(OutFile, 'w') as fo:  # creates file with same hash lines as input file and only variant lines without no calls
-			for line in hash_lines:
-				fo.write(line)
-			for line in var_lines:
-				fo.write(line) 
+			for line in vcf:
+				if '#' in line:
+					fo.write(line)  # writes all header lines to file
+				else:
+					for y in range(9, len(line.split('\t'))):  # iterates over every volumn in every variant line
+						if '.' in line.split('\t')[y][0]: 
+							break
+					else:
+						fo.write(line)
 
 
 class samp_compApp():
