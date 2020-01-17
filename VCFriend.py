@@ -481,7 +481,7 @@ def pat_matchParser(subparsers):
 		help='Extracts variants matching designated patterns of presence and absence.')
 	pat_match_parser.add_argument('-i', '--input', help='VCF File or Table (output from vcf_mat)', dest='InFile', type=str, 
 		default='Error1')
-	pat_match_parser.add_argument('-p', '--pattern', help='Comma separated string in quotes containing genotype calls or N\'s, Y\'s, and .\'s.',
+	pat_match_parser.add_argument('-p', '--pattern', help='Comma separated string in quotes containing genotype calls or N\'s, Y\'s, and .\'s. Pattern is phase sensitive.',
 		dest='Pattern', type=str, default='Error2')
 	pat_match_parser.add_argument('-o', '--output', help='Name of output file', dest='OutFile', type=str, default='Error3')
 	

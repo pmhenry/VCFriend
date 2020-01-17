@@ -51,7 +51,7 @@ FUNCTIONS: remove, vcf_mat, pat_match, nono_calls, samp_comp, dist_mat, and snp_
   	OPTIONS:
 	-i [ --input ] 		Input VCF File or Table
 
-	-p [ --pattern ]	Comma separated string in quotes containing genotype calls or N's, Y's, and .'s. Sequence of search pattern must be correspond to order of samples in VCF Table
+	-p [ --pattern ]	Comma separated string in quotes containing genotype calls or N's, Y's, and .'s. Pattern is phase sensitie. Sequence of search pattern must be correspond to order of samples in VCF Table
 
 	-o [ --output ] 	Name of Output File
 
