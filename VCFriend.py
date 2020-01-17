@@ -172,26 +172,55 @@ class nono_callsApp():
 	def start(self, InFile, OutFile):
 
 		if InFile == 'Error1':
-			raise Exception('*VCF Table File Required*')
+			raise Exception('*VCF or Table File Required*')
 		elif OutFile == 'Error2':
 			raise Exception('*Name for Output File Required*')
 
-		hash_lines = []
 		var_lines =[]
 
 		with open(InFile, 'r') as fi: # reads in VCF table file 
-			vcf = fi.readlines()  
+			file = fi.readlines() 
 
-		with open(OutFile, 'w') as fo:  # creates file with same hash lines as input file and only variant lines without no calls
-			for line in vcf:
-				if '#' in line:
-					fo.write(line)  # writes all header lines to file
+			with open(OutFile, 'w') as fo:  # creates file with same hash lines as input file and only variant lines without no calls
+
+				if '##' in file[1]: # Checks if File is in VCF or Table format
+
+					for line in file:
+						if '#' in line:
+							fo.write(line)  # writes all header lines to file
+						else:
+							for y in range(9, len(line.split('\t'))):  # iterates over every column in every variant line
+								if '.' in line.split('\t')[y][0]: 
+									break
+							else:
+								fo.write(line)
+
 				else:
-					for y in range(9, len(line.split('\t'))):  # iterates over every volumn in every variant line
-						if '.' in line.split('\t')[y][0]: 
-							break
-					else:
-						fo.write(line)
+
+					no_calls_list = []
+
+					header = file[0]
+					file = file[1:]
+
+					for line in file:
+						line_list = line.split('\t')
+
+						for i in range(1,len(line_list)):
+							if '.' in line_list[i]:
+								no_calls_list.append(i)
+
+					file = [header] + file 
+								
+					with open(OutFile, 'w') as fo:  # creates file with same hash lines as input file and only variant lines without no calls
+						for line in file:
+							line_list = line.split('\t')
+							for i in no_calls_list:
+								if i != len(line_list) - 1:
+									line_list = line_list[:i] + line_list[i+1:]
+								else: 
+									line_list = line_list[:i] 
+									line_list[-1] = line_list[-1] + '\n'
+							fo.write('\t'.join(line_list))
 
 
 class samp_compApp():
@@ -502,7 +531,7 @@ class pat_matchCMD():
 def nono_callsParser(subparsers):
 	nono_calls_parser = subparsers.add_parser('nono_calls',
 		help='Removes all variants where a genotype call could not be made for any isolate')
-	nono_calls_parser.add_argument('-i', '--input', help='VCF file', dest='InFile', type=str, default='Error1')
+	nono_calls_parser.add_argument('-i', '--input', help='VCF or Table file', dest='InFile', type=str, default='Error1')
 	nono_calls_parser.add_argument('-o', '--output', help='Name of output table', dest='OutFile', type=str, default='Error2')
 	
 	return nono_calls_parser

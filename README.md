@@ -56,10 +56,10 @@ FUNCTIONS: remove, vcf_mat, pat_match, nono_calls, samp_comp, dist_mat, and snp_
 	-o [ --output ] 	Name of Output File
 
   NONO_CALLS:
-	Removes variants for which a genotype could not be made for all samples in VCF file. Returns new VCF file without  specified sample.
+	Removes variants for which a genotype could not be made for all samples in VCF or Table file. Returns new VCF/Table file without specified sample.
 
 	OPTIONS:
-	-i [ --input ] 		Input VCF Table
+	-i [ --input ] 		Input VCF or Table
 
 	-o [ --output ] 	Name of Output File		
 
