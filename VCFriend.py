@@ -14,41 +14,57 @@ class removeApp():
 	def __init__(self):
 		self.verbose = False
 
-	
-	def start(self, InFile, Sample, OutFile):
 
+	def start(self, InFile, Sample, OutFile):
+	
 		if InFile == 'Error1':
-			raise Exception('*VCF File Required*')
+			raise Exception('*VCF or Table File Required*')
 		elif Sample == 'Error2':
 			raise Exception('*Sample ID Required*')
 		elif OutFile == 'Error3':
 			raise Exception('*Name for Output File Required*')
 
-		hash_lines = []
 		var_lines =[]
 
+		samp_list = Sample.split(',')
+
 		with open(InFile, 'r') as fi:  # read in VCF file 
-			vcf = fi.readlines()
+			file = fi.readlines()
+
 
 		with open(OutFile, 'w') as fo:  # creates file with original hash lines from input VCF.
 
-			for line in vcf:
-				if '##' in line:
-					fo.write(line)
-				else:
-					if '#' in line:
-						header = line.split('\t')
-						for x in range(9, len(header)):
-							if header[x] == Sample:
-								rm_1 = x # assigns index to remove in future lines
-								header.remove(header[rm_1]) # removes column corresponding to removed sample
-								fo.write('\t'.join(header))
-								break
-					else:
-						temp = line.split('\t')  # creates temp list where each item is a column from the VCF file
-						temp.remove(temp[rm_1])  # removes column corresponding to removed sample
-						fo.write('\t'.join(temp))
+			if '##' in file[1]: # Checks if File is in VCF or Table format
 
+				for line in vcf:
+					if '##' in line:
+						fo.write(line)
+					else:
+						if '#' in line:
+							header = line.split('\t')
+							for x in range(9, len(header)):
+								if header[x] in samp_list:
+									rm_1 = x # assigns index to remove in future lines
+									header.remove(header[rm_1]) # removes column corresponding to removed sample
+									fo.write('\t'.join(header))
+									break
+						else:
+							temp = line.split('\t')  # creates temp list where each item is a column from the VCF file
+							temp.remove(temp[rm_1])  # removes column corresponding to removed sample
+							fo.write('\t'.join(temp))
+
+			else:
+
+				for line in file:
+					clear = True
+					for samp in samp_list:
+						if samp in line:
+							clear = False
+							break
+					
+					if clear == True:
+						fo.write(line)
+							
 
 class vcf_matApp():
 
@@ -469,9 +485,9 @@ class snp_statApp():
 
 def removeParser(subparsers):
 	remove_parser = subparsers.add_parser('remove', 
-		help='Removes sample and its corresponding column from VCF')
-	remove_parser.add_argument('-i', '--input', help='VCF file', dest='InFile', type=str, default='Error1')
-	remove_parser.add_argument('-s', '--sample', help='Sample ID for Removal', dest='Sample', type=str, default='Error2')
+		help='Removes sample and its corresponding column from VCF or Table')
+	remove_parser.add_argument('-i', '--input', help='VCF or Table file', dest='InFile', type=str, default='Error1')
+	remove_parser.add_argument('-s', '--sample', help='Comma separated list of samples in quotes', dest='Sample', type=str, default='Error2')
 	remove_parser.add_argument('-o', '--output', help='Name of output VCF', dest='OutFile', type=str, default='Error3')
 	
 	return remove_parser
