@@ -134,34 +134,34 @@ class pat_matchApp():
 		with open(InFile, 'r') as fi:
 			file = fi.readlines()
 
-			if '##' in file[1]: # Checks if File is in VCF or Table format
+		if '##' in file[1]: # Checks if File is in VCF or Table format
 
-				with open(OutFile, 'w') as fo:  # creates a new file with every line being a gene header + '\n'
-					for line in file:
-						if '#' not in line:
-							genotype_map = map(lambda x : x.split(':')[0].strip(), line.split('\t')[9:])
-							genotype_calls = list(genotype_map)
-							result = pat_matchApp.pat_match(Pattern, genotype_calls)
-
-							if result == 1:
-								name = str(line.split('\t')[0]) + ':' + str(line.split('\t')[1]) # extracts variants scaffold and position
-								fo.write(name + '\n')
-
-			else:
-				l = len(file[0].split('\t'))  # length variable for loop below	
-
-				with open(OutFile, 'w') as fo:  # creates a new file with every line being a gene header + '\n'
-
-					for x in range(1, l):  # parses tab deliminated text file for pattern and generates a list of texts to search 
-						temp = []
-						for y in range(1, len(file)):  # splits ever line of file into a list by tabs, assigns each item on each line at a given position to a list
-							number = file[y].split('\t')[x] 
-							temp.append(number.strip()) 
-
-						result = pat_matchApp.pat_match(Pattern, temp)  # outputs a '1' or '0' and appends to a list 
+			with open(OutFile, 'w') as fo:  # creates a new file with every line being a gene header + '\n'
+				for line in file:
+					if '#' not in line:
+						genotype_map = map(lambda x : x.split(':')[0].strip(), line.split('\t')[9:])
+						genotype_calls = list(genotype_map)
+						result = pat_matchApp.pat_match(Pattern, genotype_calls)
 
 						if result == 1:
-							fo.write(file[0].split('\t')[x].strip() + '\n')
+							name = str(line.split('\t')[0]) + ':' + str(line.split('\t')[1]) # extracts variants scaffold and position
+							fo.write(name + '\n')
+
+		else:
+			l = len(file[0].split('\t'))  # length variable for loop below	
+
+			with open(OutFile, 'w') as fo:  # creates a new file with every line being a gene header + '\n'
+
+				for x in range(1, l):  # parses tab deliminated text file for pattern and generates a list of texts to search 
+					temp = []
+					for y in range(1, len(file)):  # splits ever line of file into a list by tabs, assigns each item on each line at a given position to a list
+						number = file[y].split('\t')[x] 
+						temp.append(number.strip()) 
+
+					result = pat_matchApp.pat_match(Pattern, temp)  # outputs a '1' or '0' and appends to a list 
+
+					if result == 1:
+						fo.write(file[0].split('\t')[x].strip() + '\n')
 
 
 class nono_callsApp():
@@ -181,46 +181,46 @@ class nono_callsApp():
 		with open(InFile, 'r') as fi: # reads in VCF table file 
 			file = fi.readlines() 
 
-			with open(OutFile, 'w') as fo:  # creates file with same hash lines as input file and only variant lines without no calls
+		with open(OutFile, 'w') as fo:  # creates file with same hash lines as input file and only variant lines without no calls
 
-				if '##' in file[1]: # Checks if File is in VCF or Table format
+			if '##' in file[1]: # Checks if File is in VCF or Table format
 
-					for line in file:
-						if '#' in line:
-							fo.write(line)  # writes all header lines to file
+				for line in file:
+					if '#' in line:
+						fo.write(line)  # writes all header lines to file
+					else:
+						for y in range(9, len(line.split('\t'))):  # iterates over every column in every variant line
+							if '.' in line.split('\t')[y][0]: 
+								break
 						else:
-							for y in range(9, len(line.split('\t'))):  # iterates over every column in every variant line
-								if '.' in line.split('\t')[y][0]: 
-									break
-							else:
-								fo.write(line)
+							fo.write(line)
 
-				else:
+			else:
 
-					no_calls_list = []
+				no_calls_list = []
 
-					header = file[0]
-					file = file[1:]
+				header = file[0]
+				file = file[1:]
 
+				for line in file:
+					line_list = line.split('\t')
+
+					for i in range(1,len(line_list)):
+						if '.' in line_list[i]:
+							no_calls_list.append(i)
+
+				file = [header] + file 
+							
+				with open(OutFile, 'w') as fo:  # creates file with same hash lines as input file and only variant lines without no calls
 					for line in file:
 						line_list = line.split('\t')
-
-						for i in range(1,len(line_list)):
-							if '.' in line_list[i]:
-								no_calls_list.append(i)
-
-					file = [header] + file 
-								
-					with open(OutFile, 'w') as fo:  # creates file with same hash lines as input file and only variant lines without no calls
-						for line in file:
-							line_list = line.split('\t')
-							for i in no_calls_list:
-								if i != len(line_list) - 1:
-									line_list = line_list[:i] + line_list[i+1:]
-								else: 
-									line_list = line_list[:i] 
-									line_list[-1] = line_list[-1] + '\n'
-							fo.write('\t'.join(line_list))
+						for i in no_calls_list:
+							if i != len(line_list) - 1:
+								line_list = line_list[:i] + line_list[i+1:]
+							else: 
+								line_list = line_list[:i] 
+								line_list[-1] = line_list[-1] + '\n'
+						fo.write('\t'.join(line_list))
 
 
 class samp_compApp():
@@ -363,7 +363,6 @@ class dist_matApp():
 				for y in range(len(dist[x])):
 					temp += '\t' + str(dist[x][y])
 				fo.write(temp + '\n') 
-
 
 
 class snp_statApp():
