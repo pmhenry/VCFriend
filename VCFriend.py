@@ -15,6 +15,8 @@ class removeApp():
 		self.verbose = False
 
 	
+	def start(self, InFile, Sample, OutFile):
+
 		if InFile == 'Error1':
 			raise Exception('*VCF File Required*')
 		elif Sample == 'Error2':
@@ -150,7 +152,7 @@ class pat_matchApp():
 							fo.write(name + '\n')
 
 			else:
-				
+
 				l = len(file[0].split('\t'))  # length variable for loop below	
 
 
