@@ -134,9 +134,11 @@ class pat_matchApp():
 		with open(InFile, 'r') as fi:
 			file = fi.readlines()
 
-		if '##' in file[1]: # Checks if File is in VCF or Table format
 
-			with open(OutFile, 'w') as fo:  # creates a new file with every line being a gene header + '\n'
+		with open(OutFile, 'w') as fo:  # creates a new file with every line being a gene header + '\n'
+
+			if '##' in file[1]: # Checks if File is in VCF or Table format
+
 				for line in file:
 					if '#' not in line:
 						genotype_map = map(lambda x : x.split(':')[0].strip(), line.split('\t')[9:])
@@ -147,10 +149,10 @@ class pat_matchApp():
 							name = str(line.split('\t')[0]) + ':' + str(line.split('\t')[1]) # extracts variants scaffold and position
 							fo.write(name + '\n')
 
-		else:
-			l = len(file[0].split('\t'))  # length variable for loop below	
+			else:
+				
+				l = len(file[0].split('\t'))  # length variable for loop below	
 
-			with open(OutFile, 'w') as fo:  # creates a new file with every line being a gene header + '\n'
 
 				for x in range(1, l):  # parses tab deliminated text file for pattern and generates a list of texts to search 
 					temp = []
