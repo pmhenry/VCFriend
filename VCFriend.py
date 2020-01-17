@@ -99,7 +99,9 @@ class pat_matchApp():
 	def __init__(self):
 		self.verbose = False
 
-	def pat_match(pattern, text):  #  matching algorithm, returns either '1' (match) or '0' (no match)  
+	def pat_match(pattern, text):  #  matching algorithm, returns either '1' (match) or '0' (no match)
+
+			pattern = pattern.split(',')  
 
 			for i in range(len(pattern)):  #  compares pattern and text by individual characters
 				match = True
@@ -117,10 +119,12 @@ class pat_matchApp():
 
 			return m
 
+
 	def start(self, InFile, Pattern, OutFile):
 
+
 		if InFile == 'Error1':
-			raise Exception('*VCF Table File Required*')
+			raise Exception('*VCF File or VCF Table Required*')
 		elif Pattern == 'Error2':
 			raise Exception('*Presence/Absence Pattern Required*')
 		elif OutFile == 'Error3':
@@ -130,20 +134,34 @@ class pat_matchApp():
 		with open(InFile, 'r') as fi:
 			file = fi.readlines()
 
-		l = len(file[0].split('\t'))  # length variable for loop below	
+			if '##' in file[1]: # Checks if File is in VCF or Table format
 
-		with open(OutFile, 'w') as fo:  # creates a new file with every line being a gene header + '\n'
+				with open(OutFile, 'w') as fo:  # creates a new file with every line being a gene header + '\n'
+					for line in file:
+						if '#' not in line:
+							genotype_map = map(lambda x : x.split(':')[0].strip(), line.split('\t')[9:])
+							genotype_calls = list(genotype_map)
+							result = pat_matchApp.pat_match(Pattern, genotype_calls)
 
-			for x in range(1, l):  # parses tab deliminated text file for pattern and generates a list of texts to search 
-				temp = []
-				for y in range(1, len(file)):  # splits ever line of file into a list by tabs, assigns each item on each line at a given position to a list
-					number = file[y].split('\t')[x] 
-					temp.append(number.strip()) 
+							if result == 1:
+								name = str(line.split('\t')[0]) + ':' + str(line.split('\t')[1]) # extracts variants scaffold and position
+								fo.write(name + '\n')
 
-				result = pat_matchApp.pat_match(Pattern, ''.join(temp))  # outputs a '1' or '0' and appends to a list 
+			else:
+				l = len(file[0].split('\t'))  # length variable for loop below	
 
-				if result == 1:
-					fo.write(file[0].split('\t')[x].strip() + '\n')
+				with open(OutFile, 'w') as fo:  # creates a new file with every line being a gene header + '\n'
+
+					for x in range(1, l):  # parses tab deliminated text file for pattern and generates a list of texts to search 
+						temp = []
+						for y in range(1, len(file)):  # splits ever line of file into a list by tabs, assigns each item on each line at a given position to a list
+							number = file[y].split('\t')[x] 
+							temp.append(number.strip()) 
+
+						result = pat_matchApp.pat_match(Pattern, temp)  # outputs a '1' or '0' and appends to a list 
+
+						if result == 1:
+							fo.write(file[0].split('\t')[x].strip() + '\n')
 
 
 class nono_callsApp():
@@ -461,9 +479,9 @@ class vcf_matCMD():
 def pat_matchParser(subparsers):
 	pat_match_parser = subparsers.add_parser('pat_match', 
 		help='Extracts variants matching designated patterns of presence and absence.')
-	pat_match_parser.add_argument('-i', '--input', help='VCF Table (output from vcf_mat)', dest='InFile', type=str, 
+	pat_match_parser.add_argument('-i', '--input', help='VCF File or Table (output from vcf_mat)', dest='InFile', type=str, 
 		default='Error1')
-	pat_match_parser.add_argument('-p', '--pattern', help='String containing only 1\'s, 0\'s, N\'s, Y\'s, and .\'s.',
+	pat_match_parser.add_argument('-p', '--pattern', help='Comma separated string in quotes containing genotype calls or N\'s, Y\'s, and .\'s.',
 		dest='Pattern', type=str, default='Error2')
 	pat_match_parser.add_argument('-o', '--output', help='Name of output file', dest='OutFile', type=str, default='Error3')
 	

@@ -46,12 +46,12 @@ FUNCTIONS: remove, vcf_mat, pat_match, nono_calls, samp_comp, dist_mat, and snp_
 	-o [ --output ] 	Name of Output File
 
   PAT_MATCH:
-	Searches variant matrix (vcf_mat output) for patterns of presence/absence for variants among genomes. Returns file with list of variants matching the designated pattern ofpresence/absence. For patterns, 1's indicate that variant must be present in given genoms while 0's indicate absence. N's exclude the genome from the pattern match. 
+	Searches variant matrix (vcf_mat output) for patterns of presence/absence for variants among genomes. Returns file with list of variants matching the designated pattern ofpresence/absence. For patterns, 1's indicate that variant must be present in given genoms while 0's indicate absence. N's exclude the genome from the pattern match. N's in pattern mean sample is ignored. Y's require that a genotype call is made for the sample. .'s correspond to no genotype calls in the VCF.
 
   	OPTIONS:
-	-i [ --input ] 		Input VCF Table
+	-i [ --input ] 		Input VCF File or Table
 
-	-p [ --pattern ]	String of length equal to number of samples containing only 1's, 0's, or N's. Sequence of search pattern must be correspond to order of samples in VCF Table
+	-p [ --pattern ]	Comma separated string in quotes containing genotype calls or N's, Y's, and .'s. Sequence of search pattern must be correspond to order of samples in VCF Table
 
 	-o [ --output ] 	Name of Output File
 
