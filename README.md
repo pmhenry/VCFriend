@@ -76,10 +76,10 @@ FUNCTIONS: remove, vcf_mat, pat_match, nono_calls, samp_comp, dist_mat, and snp_
 	-o [ --output ]         Output list of shared variant names
 
   SIM_MAT:
-	Returns similarity matrix from samples in variant matrix (vcf_mat output).
+	Returns similarity matrix for samples.
 
 	OPTIONS:
-	 -i [ --input ]          Input VCF Table
+	 -i [ --input ]          Input VCF or Table
 
 	 -o [ --output ]         Name of Output File
   

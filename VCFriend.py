@@ -338,7 +338,7 @@ class sim_matApp():
 	def start(self, InFile, OutFile):
 
 		if InFile == 'Error1':
-			raise Exception('*VCF Table File Required*')
+			raise Exception('*VCF or Table File Required*')
 		elif OutFile == 'Error2':
 			raise Exception('*Output File Name Required*')
 
@@ -629,7 +629,7 @@ class samp_compCMD():
 def sim_matParser(subparsers):
 	sim_mat_parser = subparsers.add_parser('sim_mat',
 		help='Uses vcf table to create a similarity matrix of all samples. ')
-	sim_mat_parser.add_argument('-i', '--input', help='VCF Table (output from vcf_mat)', dest='InFile', type=str, default='Error1')
+	sim_mat_parser.add_argument('-i', '--input', help='VCF or Table File(output from vcf_mat)', dest='InFile', type=str, default='Error1')
 	sim_mat_parser.add_argument('-o', '--output', help='Name of output similarity matrix', dest='OutFile', type=str, default='Error2')
 
 	return sim_mat_parser
