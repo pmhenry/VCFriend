@@ -40,7 +40,7 @@ class removeApp():
 					if '##' in line:
 						fo.write(line)
 					else:
-						if '#' in line:
+						if '#CHROM' in line:
 							header = line.split('\t')
 							for x in range(9, len(header)):
 								if header[x] in samp_list:
@@ -206,7 +206,7 @@ class nono_callsApp():
 			if '##' in file[1]: # Checks if File is in VCF or Table format
 
 				for line in file:
-					if '#' in line:
+					if '#CHROM' in line:
 						fo.write(line)  # writes all header lines to file
 					else:
 						for y in range(9, len(line.split('\t'))):  # iterates over every column in every variant line
@@ -330,7 +330,7 @@ class samp_compApp():
 					fo.write(sim + '\n')
 
 
-class dist_matApp():
+class sim_matApp():
 
 	def __init__(self):
 		self.verbose = False
@@ -344,45 +344,83 @@ class dist_matApp():
 
 		table = {}
 		samples = []
-		dist = []
+		sim_table = []
 
 		with open(InFile, "r") as fi:  # reads in vcf matrix
-			lines = fi.readlines()
-
-		for line in lines:  # creates dictionary with sample as key an allele sequence as value 
-			table[line.split("\t")[0]] = "".join(line.split("\t")[1:])
-			samples.append(line.split("\t")[0])  # also adds all samples to a list
+			file = fi.readlines()
 
 
-		num_samps = len(samples) 
+		if '##' in file[1]: # Checks if File is in VCF or Table format
 
-		for i in range(num_samps - 1):  # populates the distance matrix with 0's to the propper dimensions
-			dist.append([])
-			for j in range(num_samps - 1):
-				dist[i].append("0")
+			for i in range(len(file)):  # creates dictionary with sample as key an allele sequence as value 	
 
-		for x in range(1, num_samps):  # iterates over columns
-			for y in range(1, num_samps): # iterates over columns for comparison
-				sim = 0
-				samp_1 = table[samples[x]]
-				samp_2 = table[samples[y]]
-				if len(samp_1) >= len(samp_2):  # choses shortest allele sequence
-					length = len(samp_1)
-				else:
-					length = len(samp_2)
-				for c in range(length):
-					if samp_1[c] == samp_2[c]:  # for each match in allele sequences, similarity count increases
-						sim += 1
-				perc_sim = sim / (( len(samp_1) + len(samp_2) ) / 2 )  # percent similarity formula
-				dist[x-1][y-1] = perc_sim  # adds above value to correct spot in matrix
+				if "#CHROM" in file[i]:
+					pos = i
+					for sample in file[i].split("\t")[9:]:
+						table[sample.strip()] = [0] * len(file[i].split("\t")[9:])
+						samples.append(sample.strip())
 
-		with open(OutFile, "w") as fo:  # opens output file
-			fo.write('\t'.join(samples) + '\n')  # populates matrix column headers
-			for x in range(len(dist)):           # populates matrix by row
-				temp = samples[x+1] 
-				for y in range(len(dist[x])):
-					temp += '\t' + str(dist[x][y])
-				fo.write(temp + '\n') 
+					break
+
+
+			num_samps = len(samples)
+			var_length = len(file[pos+1:])
+
+			for i in range(num_samps):
+				sample = samples[i]
+				for j in range(pos+1, len(file)):
+					for k in range(num_samps):
+						if file[j].split("\t")[9+i].split(':')[0] == file[j].split("\t")[9+k].split(':')[0]:
+							table[sample][k] += 1
+
+			
+			for samp in samples:  # populates the distance matrix with 0's to the propper dimensions
+				sim_table.append(list(map(lambda x : x / var_length, table[samp])))
+
+			with open(OutFile, "w") as fo:  # opens output file
+				fo.write(' ' + '\t' + '\t'.join(samples) + '\n')  # populates matrix column headers
+				for x in range(len(sim_table)):           # populates matrix by row
+					temp = samples[x] 
+					for y in range(len(sim_table[x])):
+						temp += '\t' + str(sim_table[x][y])
+					fo.write(temp + '\n') 
+
+
+		else:
+
+			for line in file:  # creates dictionary with sample as key an allele sequence as value 
+				table[line.split("\t")[0]] = line.split("\t")[1:]
+				samples.append(line.split("\t")[0])  # also adds all samples to a list
+
+			num_samps = len(samples) 
+
+			for i in range(num_samps - 1):  # populates the distance matrix with 0's to the propper dimensions
+				sim_table.append([])
+				for j in range(num_samps - 1):
+					sim_table[i].append("0")
+
+			for x in range(1, num_samps):  # iterates over columns
+				for y in range(1, num_samps): # iterates over columns for comparison
+					sim = 0
+					samp_1 = table[samples[x]]
+					samp_2 = table[samples[y]]
+					if len(samp_1) >= len(samp_2):  # choses shortest allele sequence
+						length = len(samp_1)
+					else:
+						length = len(samp_2)
+					for c in range(length):
+						if samp_1[c] == samp_2[c]:  # for each match in allele sequences, similarity count increases
+							sim += 1
+					perc_sim = sim / (( len(samp_1) + len(samp_2) ) / 2 )  # percent similarity formula
+					sim_table[x-1][y-1] = perc_sim  # adds above value to correct spot in matrix
+
+			with open(OutFile, "w") as fo:  # opens output file
+				fo.write('\t'.join(samples) + '\n')  # populates matrix column headers
+				for x in range(len(sim_table)):           # populates matrix by row
+					temp = samples[x+1] 
+					for y in range(len(sim_table[x])):
+						temp += '\t' + str(sim_table[x][y])
+					fo.write(temp + '\n') 
 
 
 class snp_statApp():
@@ -588,21 +626,21 @@ class samp_compCMD():
 ###############
 # dist_mat
   
-def dist_matParser(subparsers):
-	dist_mat_parser = subparsers.add_parser('dist_mat',
-		help='Uses vcf table to create a distance matrix of all samples. NOTE: This is not optimized (every spot in distance matrix is calculated, even repeats)')
-	dist_mat_parser.add_argument('-i', '--input', help='VCF Table (output from vcf_mat)', dest='InFile', type=str, default='Error1')
-	dist_mat_parser.add_argument('-o', '--output', help='Name of output distance matrix', dest='OutFile', type=str, default='Error2')
+def sim_matParser(subparsers):
+	sim_mat_parser = subparsers.add_parser('sim_mat',
+		help='Uses vcf table to create a similarity matrix of all samples. ')
+	sim_mat_parser.add_argument('-i', '--input', help='VCF Table (output from vcf_mat)', dest='InFile', type=str, default='Error1')
+	sim_mat_parser.add_argument('-o', '--output', help='Name of output similarity matrix', dest='OutFile', type=str, default='Error2')
 
-	return dist_mat_parser
+	return sim_mat_parser
 
-class dist_matCMD():
+class sim_matCMD():
 
 	def __init__(self):
 		pass
 
 	def execute(self, args):
-   		app = dist_matApp()
+   		app = sim_matApp()
    		return app.start(args.InFile, args.OutFile)
 
 ###############
@@ -638,7 +676,7 @@ def parseArgs():
     pat_matchParser(subparsers)
     nono_callsParser(subparsers)
     samp_compParser(subparsers)
-    dist_matParser(subparsers)
+    sim_matParser(subparsers)
     snp_statParser(subparsers)
     args = parser.parse_args()
     return args
@@ -649,11 +687,11 @@ def main():
 	pat_match = pat_matchCMD()
 	nono_calls = nono_callsCMD()
 	samp_comp = samp_compCMD()
-	dist_mat = dist_matCMD()
+	sim_mat = sim_matCMD()
 	snp_stat = snp_statCMD()
 	commands = {'remove':remove, 'vcf_mat':vcf_mat, 
 				'pat_match':pat_match, 'nono_calls':nono_calls, 
-				'samp_comp':samp_comp , 'dist_mat':dist_mat,
+				'samp_comp':samp_comp , 'sim_mat':sim_mat,
 				'snp_stat':snp_stat}
 	args = parseArgs()
 	commands[args.command].execute(args)

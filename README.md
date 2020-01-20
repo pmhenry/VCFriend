@@ -75,8 +75,8 @@ FUNCTIONS: remove, vcf_mat, pat_match, nono_calls, samp_comp, dist_mat, and snp_
 
 	-o [ --output ]         Output list of shared variant names
 
-  DIST_MAT:
-	Returns distance matrix from samples in variant matrix (vcf_mat output).
+  SIM_MAT:
+	Returns similarity matrix from samples in variant matrix (vcf_mat output).
 
 	OPTIONS:
 	 -i [ --input ]          Input VCF Table
