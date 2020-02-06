@@ -14,7 +14,7 @@ FUNCTIONS: remove, vcf_mat, pat_match, nono_calls, samp_comp, dist_mat, and snp_
 	Removes a sample from a VCF or Table file.	
   	
 	OPTIONS:
-	-i [ --input ] 		Input VCF File
+	-i [ --input ] 		Input VCF or Table File
 
 	-s [ --sample ]		Comma separated list of ID of Samples to be removed
 
