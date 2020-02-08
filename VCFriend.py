@@ -6,7 +6,6 @@
 # analyzing data from VCF files. 
 #
 ######################################################################
-import os
 import argparse
 
 class removeApp():
