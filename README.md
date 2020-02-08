@@ -95,6 +95,6 @@ FUNCTIONS: remove, vcf_mat, pat_match, nono_calls, samp_comp, dist_mat, and snp_
   
 ########################################
 
-Last Updated: November 7th, 2019
+Last Updated: February 7th, 2020
 
 For comments of questions, please contact Bradley Jenner <bnjenner@ucdavis.edu>
