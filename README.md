@@ -93,6 +93,7 @@ FUNCTIONS: remove, vcf_mat, pat_match, nono_calls, samp_comp, dist_mat, and snp_
 
 	 -o [ --output ]         Name of Output File Suffix
   
+########################################
 
 Last Updated: November 7th, 2019
 
