@@ -9,7 +9,9 @@ USAGE:
 	python3 VCFriend.py [FUNCTION] [OPTIONS]
 	
 FUNCTIONS: remove, vcf_mat, pat_match, nono_calls, samp_comp, dist_mat, and snp_stat
-   
+
+####################
+  
    REMOVE:
 	Removes a sample from a VCF or Matrix file.	
   	
