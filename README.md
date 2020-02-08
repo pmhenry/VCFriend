@@ -11,17 +11,17 @@ USAGE:
 FUNCTIONS: remove, vcf_mat, pat_match, nono_calls, samp_comp, dist_mat, and snp_stat
    
    REMOVE:
-	Removes a sample from a VCF or Table file.	
+	Removes a sample from a VCF or Matrix file.	
   	
 	OPTIONS:
-	-i [ --input ] 		Input VCF or Table File
+	-i [ --input ] 		Input VCF or Matrix File
 
 	-s [ --sample ]		Comma separated list of ID of Samples to be removed
 
 	-o [ --output ] 	Name of Output File
 	
   VCF_MAT:
-	Generates variant matrix (tab delimited text file) where samples are rows and variants are columns. Number represents genotype designation from VCF file. 
+	VCF file simplification. Generates variant matrix (tab delimited text file) containing only genotype data. Samples are rows and variants are columns. 
 
 	VCF Table Example: 
 
@@ -49,25 +49,25 @@ FUNCTIONS: remove, vcf_mat, pat_match, nono_calls, samp_comp, dist_mat, and snp_
 	Searches variant matrix (vcf_mat output) for patterns of presence/absence for variants among genomes. Returns file with list of variants matching the designated pattern ofpresence/absence. For patterns, 1's indicate that variant must be present in given genoms while 0's indicate absence. N's exclude the genome from the pattern match. N's in pattern mean sample is ignored. Y's require that a genotype call is made for the sample. .'s correspond to no genotype calls in the VCF.
 
   	OPTIONS:
-	-i [ --input ] 		Input VCF File or Table
+	-i [ --input ] 		Input VCF File or Matrix
 
 	-p [ --pattern ]	Comma separated string in quotes containing genotype calls or N's, Y's, and .'s. Pattern is phase sensitie. Sequence of search pattern must be correspond to order of samples in VCF Table
 
 	-o [ --output ] 	Name of Output File
 
   NONO_CALLS:
-	Removes variants for which a genotype could not be made for all samples in VCF or Table file. Returns new VCF/Table file without specified sample.
+	Removes variants for which a genotype could not be made for all samples in VCF or Table file. Returns new VCF/Matrix file without specified sample.
 
 	OPTIONS:
-	-i [ --input ] 		Input VCF or Table
+	-i [ --input ] 		Input VCF or Matrix
 
 	-o [ --output ] 	Name of Output File		
 
   SAMP_COMP:
-	Returns the number of variants shared between any number of samples in variant matrix (vcf_mat output).
+	Returns the number of variants shared between any number of samples excluding 0 or more samples in VCF files or variant matrix (vcf_mat output). Function is phase sensitive for genotypes.
 
 	OPTIONS:
-	-i [ --input ] 		Input VCF Table
+	-i [ --input ] 		Input VCF File or Matrix
 
 	-s [ --samples ]	List of samples to compare separated by commas 
 
@@ -79,7 +79,7 @@ FUNCTIONS: remove, vcf_mat, pat_match, nono_calls, samp_comp, dist_mat, and snp_
 	Returns similarity matrix for samples.
 
 	OPTIONS:
-	 -i [ --input ]          Input VCF or Table
+	 -i [ --input ]          Input VCF or Matrix
 
 	 -o [ --output ]         Name of Output File
   
