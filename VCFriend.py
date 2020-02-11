@@ -495,101 +495,6 @@ class sim_matApp():
 					fo.write(temp + '\n') 
 
 
-class snp_statApp():
-
-	def __init__(self):
-		self.verbose = False
-
-	def start(self, InFile, OutFile):
-
-		if InFile == 'Error1':
-			raise Exception('*VCF File Required*')
-		elif OutFile == 'Error2':
-			raise Exception('*Output File Suffix Required*')
-
-		input_file = InFile
-		output_prefix = '/'.join(OutFile.split('/')[:-1]) + '/'
-		output_suffix = OutFile.split('/')[-1]
-		var_output = output_prefix + "variant_" + output_suffix
-		scaff_output = output_prefix + "scaffold_" + output_suffix
-
-		header = []
-		variant_list = []
-
-		scaff_dict = {}
-		metrics_dict = {
-						"DP" : 0.0,
-						"QD" : 0.0,
-						"SOR" : 0.0,
-						"MQ" : 0.0,
-						"MAPQ" : 0.0,
-						"MQRankSum" : 0.0,
-						"BaseQRankSum" : 0.0
-						}
-
-		metrics_keys = metrics_dict.keys()
-
-
-		with open(input_file, "r") as fi:
-			lines = fi.readlines()
-
-			for line in lines:
-
-				if "#CHROM" in line:
-					header = line.split('\t')[:7]
-				elif "#" not in line:
-					variant_list.append(line.split('\t'))
-
-			header[0] = "CHROM"
-
-
-		with open(var_output, "w") as fo_v:
-
-			fo_v.write('\t'.join(header) + '\n')
-
-
-			for i in range(len(variant_list)):
-
-				temp_list = variant_list[i][:7]
-				var_info_field = variant_list[i][7]
-
-				scaffold = variant_list[i][0]
-
-				if scaffold not in scaff_dict.keys():
-					scaff_dict[scaffold] = [1, metrics_dict.copy()]
-
-				else: 
-					scaff_dict[scaffold][0] += 1
-
-				for key in metrics_keys:
-
-					for info in var_info_field.split(';'):
-
-						if info.split('=')[0] == key and info.split('=')[0] != info.split('=')[-1]:
-
-							scaff_dict[scaffold][1][key] += float(info.split('=')[-1])
-							temp_list.append(info.split('=')[-1])
-							break
-							
-
-					else:
-						temp_list.append("NA")
-
-
-			
-				fo_v.write('\t'.join(temp_list) + '\n')
-
-
-		with open(scaff_output, "w") as fo_s:
-
-			fo_s.write('CHROM' + '\t' + '\t'.join(metrics_keys) + '\n')
-
-			for scaff_key in scaff_dict.keys():
-				for met_key in metrics_keys:
-					scaff_dict[scaff_key][1][met_key] = str(round((float(scaff_dict[scaff_key][1][met_key]) / scaff_dict[scaff_key][0]), 3))
-
-				fo_s.write(scaff_key + '\t' + '\t'.join(scaff_dict[scaff_key][1].values()) + '\n')
-
 ###############
 # remove
 
@@ -715,26 +620,6 @@ class sim_matCMD():
    		app = sim_matApp()
    		return app.start(args.InFile, args.OutFile)
 
-###############
-# snp_stat
-  
-def snp_statParser(subparsers):
-	snp_statparser = subparsers.add_parser('snp_stat',
-		help='Uses vcf file to create a brief summary table of certain stats at the variant and chromosome level. (Comments coming soon...)')
-	snp_statparser.add_argument('-i', '--input', help='VCF File', dest='InFile', type=str, default='Error1')
-	snp_statparser.add_argument('-o', '--output', help='Name of output suffix for summary tables', dest='OutFile', type=str, default='Error2')
-
-	return snp_statparser
-
-class snp_statCMD():
-
-	def __init__(self):
-		pass
-
-	def execute(self, args):
-   		app = snp_statApp()
-   		return app.start(args.InFile, args.OutFile)
-
 #####################################################################################
 
 
@@ -749,7 +634,6 @@ def parseArgs():
     nono_callsParser(subparsers)
     samp_compParser(subparsers)
     sim_matParser(subparsers)
-    snp_statParser(subparsers)
     args = parser.parse_args()
     return args
 
@@ -760,11 +644,9 @@ def main():
 	nono_calls = nono_callsCMD()
 	samp_comp = samp_compCMD()
 	sim_mat = sim_matCMD()
-	snp_stat = snp_statCMD()
 	commands = {'remove':remove, 'vcf_mat':vcf_mat, 
 				'pat_match':pat_match, 'nono_calls':nono_calls, 
-				'samp_comp':samp_comp , 'sim_mat':sim_mat,
-				'snp_stat':snp_stat}
+				'samp_comp':samp_comp , 'sim_mat':sim_mat}
 	args = parseArgs()
 	commands[args.command].execute(args)
 	

@@ -8,7 +8,7 @@ DESCRIPTION:
 USAGE:
 	python3 VCFriend.py [FUNCTION] [OPTIONS]
 	
-FUNCTIONS: remove, vcf_mat, pat_match, nono_calls, samp_comp, dist_mat, and snp_stat
+FUNCTIONS: remove, vcf_mat, pat_match, nono_calls, samp_comp, and dist_mat
 
 ########################################
   
@@ -84,15 +84,7 @@ FUNCTIONS: remove, vcf_mat, pat_match, nono_calls, samp_comp, dist_mat, and snp_
 	 -i [ --input ]          Input VCF or Matrix
 
 	 -o [ --output ]         Name of Output File
-  
-  SNP_STAT:
-	Returns two summary table of stats at the individual variant level and averages of the same stats at the chromosome level.
-
-	OPTIONS:
-	 -i [ --input ]          Input VCF File
-
-	 -o [ --output ]         Name of Output File Suffix
-  
+    
 ########################################
 
 Last Updated: February 7th, 2020
