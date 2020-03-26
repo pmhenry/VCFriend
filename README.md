@@ -15,7 +15,6 @@ To install, run following commands:
 
 VCFriend.py [FUNCTION] [OPTIONS]
 
----
 ## Functions
 
    remove:
