@@ -10,6 +10,47 @@
 ######################################################################
 import argparse
 
+######################################################################
+# utilities
+
+class utilities():
+
+	def __init__(self):
+		self.verbose = False
+
+	# removes pesky quotes from wieirdly formatted VCFs
+	def unquote(string): 
+
+		if "\"" in string:
+			string = string.replace('\"', '')
+
+		if "\'" in string:
+			string = string.replace('\'', '')
+
+		return string 
+
+
+	def pat_match(pattern, text):  #  matching algorithm, returns either '1' (match) or '0' (no match) 
+
+			for i in range(len(pattern)):  #  compares pattern and text by individual characters
+				match = True
+				if pattern[i] == text[i] or pattern[i] == 'N':  #  loop continues and match remains equal to true if pattern matches  
+					continue                                    #  text at given position or pattern at the given position is 'N'
+				elif pattern[i] == 'Y' and text[i] != '.':
+					continue                               
+				else:  #  if pattern does not equal match at given position, match is set to false and breaks out of the loop
+					match = False
+					break		
+			if match == True:
+				m = 1
+			else:
+				m = 0
+
+			return m
+
+
+######################################################################
+# Apps
 
 ###############
 # remove
@@ -128,26 +169,6 @@ class pat_matchApp():
 	def __init__(self):
 		self.verbose = False
 
-	def pat_match(pattern, text):  #  matching algorithm, returns either '1' (match) or '0' (no match)
-
-			pattern = pattern.split(',')  
-
-			for i in range(len(pattern)):  #  compares pattern and text by individual characters
-				match = True
-				if pattern[i] == text[i] or pattern[i] == 'N':  #  loop continues and match remains equal to true if pattern matches  
-					continue                                    #  text at given position or pattern at the given position is 'N'
-				elif pattern[i] == 'Y' and text[i] != '.':
-					continue                               
-				else:  #  if pattern does not equal match at given position, match is set to false and breaks out of the loop
-					match = False
-					break		
-			if match == True:
-				m = 1
-			else:
-				m = 0
-
-			return m
-
 
 	def start(self, InFile, Pattern, OutFile):
 
@@ -172,7 +193,7 @@ class pat_matchApp():
 					if '#' not in line:
 						genotype_map = map(lambda x : x.split(':')[0].strip(), line.split('\t')[9:])
 						genotype_calls = list(genotype_map)
-						result = pat_matchApp.pat_match(Pattern, genotype_calls)
+						result = utilities.pat_match(Pattern, genotype_calls)
 
 						if result == 1:
 							name = str(line.split('\t')[0]) + ':' + str(line.split('\t')[1]) # extracts variants scaffold and position
@@ -189,7 +210,7 @@ class pat_matchApp():
 						number = file[y].split('\t')[x] 
 						temp.append(number.strip()) 
 
-					result = pat_matchApp.pat_match(Pattern, temp)  # outputs a '1' or '0' and appends to a list 
+					result = utilities.pat_match(Pattern, temp)  # outputs a '1' or '0' and appends to a list 
 
 					if result == 1:
 						fo.write(file[0].split('\t')[x].strip() + '\n')
@@ -258,9 +279,9 @@ class clearApp():
 
 
 ###############
-# samp_comp
+# compare
 
-class samp_compApp():
+class compareApp():
 
 	def __init__(self):
 		self.verbose = False
@@ -421,9 +442,9 @@ class samp_compApp():
 
 
 ###############
-# sim_mat
+# sim-matrix
 
-class sim_matApp():
+class sim_matrixApp():
 
 	def __init__(self):
 		self.verbose = False
@@ -524,17 +545,6 @@ class allele_seqApp():
 		self.verbose = False
 
 
-	# removes pesky quotes from wieirdly formatted VCFs
-	def unquote(string): 
-
-		if "\"" in string:
-			string = string.replace('\"', '')
-
-		if "\'" in string:
-			string = string.replace('\'', '')
-
-		return string 
-
 	def start(self, InFile, OutFile):
 
 		if InFile == 'Error1':
@@ -562,12 +572,12 @@ class allele_seqApp():
 					for i in range(9, len(temp)): # iterates over sample columns
 
 
-						geno_field = allele_seqApp.unquote(temp[i])
+						geno_field = utilities.unquote(temp[i])
 						allele = geno_field.split(":")[0] 
 
 						if allele == "0":
 
-							sequences[i - 9] += allele_seqApp.unquote(temp[3])
+							sequences[i - 9] += utilities.unquote(temp[3])
 
 						elif allele == "." or "." in allele:
 
@@ -576,14 +586,14 @@ class allele_seqApp():
 						else:
 
 							alt = int(allele) - 1
-							sequences[i - 9] += allele_seqApp.unquote(temp[4].split(',')[alt])
+							sequences[i - 9] += utilities.unquote(temp[4].split(',')[alt])
 
 
 			with open(OutFile, "w") as fo: # writes to output multifasta
 
 				for i in range(len(samples)):
 							
-					fo.write(">" + allele_seqApp.unquote(samples[i].strip()) + "\n")
+					fo.write(">" + utilities.unquote(samples[i].strip()) + "\n")
 					fo.write(sequences[i].strip() + "\n")
 
 
@@ -674,51 +684,52 @@ class clearCMD():
    		return app.start(args.InFile, args.OutFile)
 
 ###############
-# samp_comp
+# compare
   
-def samp_compParser(subparsers):
-	samp_comp_parser = subparsers.add_parser('samp_comp',
-		help='Finds the percent of variants shared between two samples in a VCF file or Variant Matrix')
-	samp_comp_parser.add_argument('-i', '--input', help='VCF Table (output from vcf_mat)', dest='InFile', type=str, default='Error1')
-	samp_comp_parser.add_argument('-s', '--samples', help='List of samples to include separated by comma', dest='Samples', type=str, default='Error2')
-	samp_comp_parser.add_argument('-x', '--exclude', help='List of samples to exclude separated by comma', dest='Exclude', type=str, default=None)
-	samp_comp_parser.add_argument('-o', '--output', help='optional output file for tagged variants', dest='OutFile', type=str, default=None)
-	return samp_comp_parser
+def compareParser(subparsers):
+	compare_parser = subparsers.add_parser('compare',
+		help='Finds the percent of variants shared or not between samples in a VCF file or Variant Matrix')
+	compare_parser.add_argument('-i', '--input', help='VCF Table (output from vcf_mat)', dest='InFile', type=str, default='Error1')
+	compare_parser.add_argument('-s', '--samples', help='List of samples to include separated by comma', dest='Samples', type=str, default='Error2')
+	compare_parser.add_argument('-x', '--exclude', help='List of samples to exclude separated by comma (optional)', dest='Exclude', type=str, default=None)
+	compare_parser.add_argument('-o', '--output', help='output file for tagged variants (optional)', dest='OutFile', type=str, default=None)
+	
+	return compare_parser
 
-class samp_compCMD():
+class compareCMD():
 
 	def __init__(self):
 		pass
 
 	def execute(self, args):
-   		app = samp_compApp()
+   		app = compareApp()
    		return app.start(args.InFile, args.Samples, args.Exclude, args.OutFile)
 
 ###############
-# sim_mat
+# sim-matrix
   
-def sim_matParser(subparsers):
-	sim_mat_parser = subparsers.add_parser('sim_mat',
+def sim_matrixParser(subparsers):
+	sim_matrix_parser = subparsers.add_parser('sim-matrix',
 		help='Create a similarity matrix of all samples in a a VCF file or Variant Matrix')
-	sim_mat_parser.add_argument('-i', '--input', help='VCF or Table File(output from vcf_mat)', dest='InFile', type=str, default='Error1')
-	sim_mat_parser.add_argument('-o', '--output', help='Name of output similarity matrix', dest='OutFile', type=str, default='Error2')
+	sim_matrix_parser.add_argument('-i', '--input', help='VCF or Table File (output from matrix)', dest='InFile', type=str, default='Error1')
+	sim_matrix_parser.add_argument('-o', '--output', help='Name of output similarity matrix', dest='OutFile', type=str, default='Error2')
 
-	return sim_mat_parser
+	return sim_matrix_parser
 
-class sim_matCMD():
+class sim_matrixCMD():
 
 	def __init__(self):
 		pass
 
 	def execute(self, args):
-   		app = sim_matApp()
+   		app = sim_matrixApp()
    		return app.start(args.InFile, args.OutFile)
 
 ###############
 # allele_seq
   
 def allele_seqParser(subparsers):
-	allele_seq_parser = subparsers.add_parser('allele_seq',
+	allele_seq_parser = subparsers.add_parser('allele-seq',
 		help='Creates a multi-fasta file containing the sequence of all snp alleles for each sample in a VCF (haploid and snps only for now)')
 	allele_seq_parser.add_argument('-i', '--input', help='VCF file', dest='InFile', type=str, default='Error1')
 	allele_seq_parser.add_argument('-o', '--output', help='Name of output file', dest='OutFile', type=str, default='Error2')
@@ -748,8 +759,8 @@ def parseArgs():
     matrixParser(subparsers)
     pat_matchParser(subparsers)
     clearParser(subparsers)
-    samp_compParser(subparsers)
-    sim_matParser(subparsers)
+    compareParser(subparsers)
+    sim_matrixParser(subparsers)
     allele_seqParser(subparsers)
     args = parser.parse_args()
     return args
@@ -759,13 +770,13 @@ def main():
 	matrix = matrixCMD()
 	pat_match = pat_matchCMD()
 	clear = clearCMD()
-	samp_comp = samp_compCMD()
-	sim_mat = sim_matCMD()
+	compare = compareCMD()
+	sim_matrix = sim_matrixCMD()
 	allele_seq = allele_seqCMD()
 	commands = {'remove': remove, 'matrix': matrix, # remove, matrix
 				'pat-match': pat_match, 'clear': clear, # pat-match, clear
-				'samp_comp': samp_comp , 'sim_mat': sim_mat, # compare, sim-matrix
-				'allele_seq': allele_seq} # allele-seq
+				'compare': compare , 'sim-matrix': sim_matrix, # compare, sim-matrix
+				'allele-seq': allele_seq} # allele-seq
 	args = parseArgs()
 	commands[args.command].execute(args)
 	
