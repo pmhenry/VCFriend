@@ -5,8 +5,12 @@ Variant calling softwares utilizes VCF files that can sometimes be difficult to 
 ---
 Installation:
 	
-	git clone 
+	git clone https://github.com/bnjenner/VCFriend.git
+	echo "path/to/repo/" >> ~/.bash_profile # or equivalent 
+	source ~/.bash_profile
 	
+Run "VCFriend.py -h" to test installation.
+
 ---
 
 Usage:
