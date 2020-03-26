@@ -2,21 +2,17 @@
 
 Variant calling softwares utilizes VCF files that can sometimes be difficult to parse. VCFriend is a set of tools that can make analyzing and extracting information from VCF files easier.
 	
----
 ## Installation:
 	
 	git clone https://github.com/bnjenner/VCFriend.git
 	echo "path/to/repo/" >> ~/.bash_profile # or equivalent 
 	source ~/.bash_profile
-	
-Check Installation:
-
 	VCFriend.py -h # help page means installation was successful.
 
 ---
+## Usage 
 
-Usage:
-	VCFriend.py [FUNCTION] [OPTIONS]
+VCFriend.py [FUNCTION] [OPTIONS]
 	
 Functions: remove, matrix, pat-match, clear, compare, sim-matrix, and allele-seq
   
