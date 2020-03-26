@@ -10,7 +10,7 @@ USAGE:
 	
 FUNCTIONS: remove, matrix, pat-match, clear, compare, sim-matrix, and allele-seq
 
-########################################
+---
   
    REMOVE:
 	Removes samples from a VCF or Variant Matrix file.	
