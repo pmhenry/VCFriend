@@ -8,12 +8,12 @@ DESCRIPTION:
 USAGE:
 	VCFriend.py [FUNCTION] [OPTIONS]
 	
-FUNCTIONS: remove, vcf_mat, pat_match, nono_calls, samp_comp, and dist_mat
+FUNCTIONS: remove, vcf_mat, pat_match, nono_calls, samp_comp, sim_mat, and allele_seq
 
 ########################################
   
    REMOVE:
-	Removes a sample from a VCF or Matrix file.	
+	Removes samples from a VCF or Variant Matrix file.	
   	
 	OPTIONS:
 	-i [ --input ] 		Input VCF or Matrix File
@@ -48,7 +48,7 @@ FUNCTIONS: remove, vcf_mat, pat_match, nono_calls, samp_comp, and dist_mat
 	-o [ --output ] 	Name of Output File
 
   PAT_MATCH:
-	Searches variant matrix (vcf_mat output) for patterns of presence/absence for variants among genomes. Returns file with list of variants matching the designated pattern ofpresence/absence. For patterns, 1's indicate that variant must be present in given genoms while 0's indicate absence. N's exclude the genome from the pattern match. N's in pattern mean sample is ignored. Y's require that a genotype call is made for the sample. .'s correspond to no genotype calls in the VCF.
+	Searches VCF file or variant matrix (vcf_mat output) for patterns of presence/absence for variants among genomes. Returns file with list of variants matching the designated pattern ofpresence/absence. For patterns, 1's indicate that variant must be present in given genoms while 0's indicate absence. N's exclude the genome from the pattern match. N's in pattern mean sample is ignored. Y's require that a genotype call is made for the sample. .'s correspond to no genotype calls in the VCF.
 
   	OPTIONS:
 	-i [ --input ] 		Input VCF File or Matrix
@@ -85,6 +85,14 @@ FUNCTIONS: remove, vcf_mat, pat_match, nono_calls, samp_comp, and dist_mat
 
 	 -o [ --output ]         Name of Output File
     
+  ALLELE_SEQ:
+        Creates a multi-fasta file containing the sequence of all snp alleles for each sample in a VCF (haploid and snps only for now).
+
+        OPTIONS:
+         -i [ --input ]          Input VCF
+
+         -o [ --output ]         Name of Output Fasta File
+
 ########################################
 
 Last Updated: February 7th, 2020
