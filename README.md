@@ -8,7 +8,7 @@ DESCRIPTION:
 USAGE:
 	VCFriend.py [FUNCTION] [OPTIONS]
 	
-FUNCTIONS: remove, vcf_mat, pat_match, nono_calls, samp_comp, sim_mat, and allele_seq
+FUNCTIONS: remove, matrix, pat-match, nono_calls, samp_comp, sim_mat, and allele_seq
 
 ########################################
   
@@ -22,7 +22,7 @@ FUNCTIONS: remove, vcf_mat, pat_match, nono_calls, samp_comp, sim_mat, and allel
 
 	-o [ --output ] 	Name of Output File
 	
-  VCF_MAT:
+  MATRIX:
 	VCF file simplification. Generates variant matrix (tab delimited text file) containing only genotype data. Samples are rows and variants are columns. 
 
 	VCF Table Example: 
@@ -47,7 +47,7 @@ FUNCTIONS: remove, vcf_mat, pat_match, nono_calls, samp_comp, sim_mat, and allel
 
 	-o [ --output ] 	Name of Output File
 
-  PAT_MATCH:
+  PAT-MATCH:
 	Searches VCF file or variant matrix (vcf_mat output) for patterns of presence/absence for variants among genomes. Returns file with list of variants matching the designated pattern ofpresence/absence. For patterns, 1's indicate that variant must be present in given genoms while 0's indicate absence. N's exclude the genome from the pattern match. N's in pattern mean sample is ignored. Y's require that a genotype call is made for the sample. .'s correspond to no genotype calls in the VCF.
 
   	OPTIONS:

@@ -72,9 +72,9 @@ class removeApp():
 		
 
 ###############
-# vcf_mat
+# matrix
 
-class vcf_matApp():
+class matrixApp():
 
 	def __init__(self):
 		self.verbose = False
@@ -196,9 +196,9 @@ class pat_matchApp():
 
 
 ###############
-# nono_calls
+# clear
 
-class nono_callsApp():
+class clearApp():
 
 	def __init__(self):
 		self.verbose = False
@@ -523,6 +523,18 @@ class allele_seqApp():
 	def __init__(self):
 		self.verbose = False
 
+
+	# removes pesky quotes from wieirdly formatted VCFs
+	def unquote(string): 
+
+		if "\"" in string:
+			string = string.replace('\"', '')
+
+		if "\'" in string:
+			string = string.replace('\'', '')
+
+		return string 
+
 	def start(self, InFile, OutFile):
 
 		if InFile == 'Error1':
@@ -549,30 +561,34 @@ class allele_seqApp():
 
 					for i in range(9, len(temp)): # iterates over sample columns
 
-						allele = temp[i].split(":")[0] # genotype
+
+						geno_field = allele_seqApp.unquote(temp[i])
+						allele = geno_field.split(":")[0] 
 
 						if allele == "0":
 
-							sequences[i - 9] += temp[3]
+							sequences[i - 9] += allele_seqApp.unquote(temp[3])
 
-						elif allele == ".":
+						elif allele == "." or "." in allele:
 
 							sequences[i - 9] += "-"
+
 						else:
 
 							alt = int(allele) - 1
-							sequences[i - 9] += temp[4].split(',')[alt]
+							sequences[i - 9] += allele_seqApp.unquote(temp[4].split(',')[alt])
 
 
 			with open(OutFile, "w") as fo: # writes to output multifasta
 
 				for i in range(len(samples)):
 							
-					fo.write(">" + samples[i].strip() + "\n")
+					fo.write(">" + allele_seqApp.unquote(samples[i].strip()) + "\n")
 					fo.write(sequences[i].strip() + "\n")
 
 
 #####################################################################################
+
 ###############
 # remove
 
@@ -595,30 +611,30 @@ class removeCMD():
    		return app.start(args.InFile, args.Sample, args.OutFile)
 
 ###############
-# vcf_mat 
+# matrix 
 
-def vcf_matParser(subparsers):
-	vcf_mat_parser = subparsers.add_parser('vcf_mat', 
+def matrixParser(subparsers):
+	matrix_parser = subparsers.add_parser('matrix', 
 		help='Converts VCF file into tab deliminated text file where samples are rows and variants are columns (VCF Matrix)')
-	vcf_mat_parser.add_argument('-i', '--intput', help='VCF file', dest='InFile', type=str, default='Error1')
-	vcf_mat_parser.add_argument('-o', '--output', help='Name of output table', dest='OutFile', type=str, default='Error2')
+	matrix_parser.add_argument('-i', '--intput', help='VCF file', dest='InFile', type=str, default='Error1')
+	matrix_parser.add_argument('-o', '--output', help='Name of output table', dest='OutFile', type=str, default='Error2')
 	
-	return vcf_mat_parser
+	return matrix_parser
 
-class vcf_matCMD():
+class matrixCMD():
 
 	def __init__(self):
 		pass
 
 	def execute(self, args):
-   		app = vcf_matApp()
+   		app = matrixApp()
    		return app.start(args.InFile, args.OutFile)
 
 ###############
 # pat_match 
 
 def pat_matchParser(subparsers):
-	pat_match_parser = subparsers.add_parser('pat_match', 
+	pat_match_parser = subparsers.add_parser('pat-match', 
 		help='Extracts variants matching designated patterns of presence and absence from VCF files or Variant Matrix')
 	pat_match_parser.add_argument('-i', '--input', help='VCF File or Table (output from vcf_mat)', dest='InFile', type=str, 
 		default='Error1')
@@ -638,23 +654,23 @@ class pat_matchCMD():
    		return app.start(args.InFile, args.Pattern, args.OutFile)
 
 ###############
-# nono_calls
+# clear
  
-def nono_callsParser(subparsers):
-	nono_calls_parser = subparsers.add_parser('nono_calls',
+def clearParser(subparsers):
+	clear_parser = subparsers.add_parser('clear',
 		help='Removes all variants from VCF files or a Variant Matrix where a genotype call could not be made for any isolate')
-	nono_calls_parser.add_argument('-i', '--input', help='VCF or Table file', dest='InFile', type=str, default='Error1')
-	nono_calls_parser.add_argument('-o', '--output', help='Name of output table', dest='OutFile', type=str, default='Error2')
+	clear_parser.add_argument('-i', '--input', help='VCF or Table file', dest='InFile', type=str, default='Error1')
+	clear_parser.add_argument('-o', '--output', help='Name of output table', dest='OutFile', type=str, default='Error2')
 	
-	return nono_calls_parser
+	return clear_parser
 
-class nono_callsCMD():
+class clearCMD():
 
 	def __init__(self):
 		pass
 
 	def execute(self, args):
-   		app = nono_callsApp()
+   		app = clearApp()
    		return app.start(args.InFile, args.OutFile)
 
 ###############
@@ -719,6 +735,7 @@ class allele_seqCMD():
    		return app.start(args.InFile, args.OutFile)
 
 #####################################################################################
+
 ###############
 # argument parser
 
@@ -728,9 +745,9 @@ def parseArgs():
         epilog="For questions or comments, contact Bradley Jenner <bnjenner@ucdavis.edu>")
     subparsers = parser.add_subparsers(help='commands', dest='command')
     removeParser(subparsers)
-    vcf_matParser(subparsers)
+    matrixParser(subparsers)
     pat_matchParser(subparsers)
-    nono_callsParser(subparsers)
+    clearParser(subparsers)
     samp_compParser(subparsers)
     sim_matParser(subparsers)
     allele_seqParser(subparsers)
@@ -739,16 +756,16 @@ def parseArgs():
 
 def main():
 	remove = removeCMD()
-	vcf_mat = vcf_matCMD()
+	matrix = matrixCMD()
 	pat_match = pat_matchCMD()
-	nono_calls = nono_callsCMD()
+	clear = clearCMD()
 	samp_comp = samp_compCMD()
 	sim_mat = sim_matCMD()
 	allele_seq = allele_seqCMD()
-	commands = {'remove': remove, 'vcf_mat': vcf_mat, 
-				'pat_match': pat_match, 'nono_calls': nono_calls, 
-				'samp_comp': samp_comp , 'sim_mat': sim_mat,
-				'allele_seq': allele_seq}
+	commands = {'remove': remove, 'matrix': matrix, # remove, matrix
+				'pat-match': pat_match, 'clear': clear, # pat-match, clear
+				'samp_comp': samp_comp , 'sim_mat': sim_mat, # compare, sim-matrix
+				'allele_seq': allele_seq} # allele-seq
 	args = parseArgs()
 	commands[args.command].execute(args)
 	
