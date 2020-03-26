@@ -8,7 +8,7 @@ DESCRIPTION:
 USAGE:
 	VCFriend.py [FUNCTION] [OPTIONS]
 	
-FUNCTIONS: remove, matrix, pat-match, clear, compare, sim_matrix, and allele-seq
+FUNCTIONS: remove, matrix, pat-match, clear, compare, sim-matrix, and allele-seq
 
 ########################################
   
