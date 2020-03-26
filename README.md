@@ -112,6 +112,6 @@ VCFriend.py [FUNCTION] [OPTIONS]
 
 ---
 
-Last Updated: February 7th, 2020
+Last Updated: March 26th, 2020
 
 For comments of questions, please contact Bradley Jenner <bnjenner@ucdavis.edu>
