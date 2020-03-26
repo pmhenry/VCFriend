@@ -83,19 +83,25 @@ class removeApp():
 			if '##' in file[1]: # Checks if File is in VCF or Table format
 
 				for line in vcf:
+
 					if '##' in line:
 						fo.write(line)
+					
 					else:
+					
 						if '#CHROM' in line:
-							header = line.split('\t')
+							header = utilities.unquote(line).split('\t')
+					
 							for x in range(9, len(header)):
+					
 								if header[x] in samp_list:
 									rm_1 = x # assigns index to remove in future lines
 									header.remove(header[rm_1]) # removes column corresponding to removed sample
 									fo.write('\t'.join(header))
 									break
+					
 						else:
-							temp = line.split('\t')  # creates temp list where each item is a column from the VCF file
+							temp = utilities.unquote(line).split('\t')  # creates temp list where each item is a column from the VCF file
 							temp.remove(temp[rm_1])  # removes column corresponding to removed sample
 							fo.write('\t'.join(temp))
 
@@ -103,13 +109,15 @@ class removeApp():
 
 				for line in file:
 					clear = True
+					
 					for samp in samp_list:
+					
 						if samp in line:
 							clear = False
 							break
 					
 					if clear == True:
-						fo.write(line)
+						fo.write(utilities.unquote(line))
 		
 
 ###############
@@ -137,23 +145,23 @@ class matrixApp():
 			if '##' not in line:
 
 				if head_bool == True:
-					isolates = line.split('\t')[9:] # extracts isolate names from VCF. List contains isolate names in order
+					isolates = utilities.unquote(line).split('\t')[9:] # extracts isolate names from VCF. List contains isolate names in order
 					isolates[-1] = isolates[-1][:-1] # removes newline at end of string
 					isolates = list(map(lambda x:[x], isolates)) 
 					head = ['']
 					head_bool = False
 
 				else:
-					name = str(line.split('\t')[0]) + ':' + str(line.split('\t')[1]) # extracts variants scaffold and position
+					name = utilities.unquote(str(line.split('\t')[0]) + ':' + str(line.split('\t')[1])) # extracts variants scaffold and position
 					head.append(name) # unique variant name is 'scaffold':'position'
 
 					for x in range(len(isolates)): # cycles through isolate columns list
 						temp = isolates[x]
-						temp.append(line.split('\t')[9+x].split(':')[0].strip())  # takes genotype assignment for isolate on each line
+						temp.append(utilities.unquote(line).split('\t')[9+x].split(':')[0].strip())  # takes genotype assignment for isolate on each line
 						isolates[x] = temp				
 						
 
-		header = '\t'.join(head) # creates tab separated string containing variant ID's.
+		header = utilities.unquote('\t'.join(head)) # creates tab separated string containing variant ID's.
 
 		with open(OutFile, 'w') as fo:  # creates tab separated tables where columns are variants and rows are isolate genotypes
 			fo.write(header + '\n')
@@ -190,13 +198,14 @@ class pat_matchApp():
 			if '##' in file[1]: # Checks if File is in VCF or Table format
 
 				for line in file:
+
 					if '#' not in line:
-						genotype_map = map(lambda x : x.split(':')[0].strip(), line.split('\t')[9:])
+						genotype_map = map(lambda x : x.split(':')[0].strip(), utilities.unquote(line).split('\t')[9:])
 						genotype_calls = list(genotype_map)
 						result = utilities.pat_match(Pattern, genotype_calls)
 
 						if result == 1:
-							name = str(line.split('\t')[0]) + ':' + str(line.split('\t')[1]) # extracts variants scaffold and position
+							name = utilities.unquote(str(line.split('\t')[0]) + ':' + str(line.split('\t')[1])) # extracts variants scaffold and position
 							fo.write(name + '\n')
 
 			else:
@@ -206,8 +215,9 @@ class pat_matchApp():
 
 				for x in range(1, l):  # parses tab deliminated text file for pattern and generates a list of texts to search 
 					temp = []
+					
 					for y in range(1, len(file)):  # splits ever line of file into a list by tabs, assigns each item on each line at a given position to a list
-						number = file[y].split('\t')[x] 
+						number = utilities.unquote(file[y]).split('\t')[x] 
 						temp.append(number.strip()) 
 
 					result = utilities.pat_match(Pattern, temp)  # outputs a '1' or '0' and appends to a list 
@@ -241,10 +251,14 @@ class clearApp():
 			if '##' in file[1]: # Checks if File is in VCF or Table format
 
 				for line in file:
+				
 					if '#CHROM' in line:
 						fo.write(line)  # writes all header lines to file
+				
 					else:
+				
 						for y in range(9, len(line.split('\t'))):  # iterates over every column in every variant line
+				
 							if '.' in line.split('\t')[y][0]: 
 								break
 						else:
@@ -261,17 +275,22 @@ class clearApp():
 					line_list = line.split('\t')
 
 					for i in range(1,len(line_list)):
+
 						if '.' in line_list[i]:
 							no_calls_list.append(i)
 
 				file = [header] + file 
 							
 				with open(OutFile, 'w') as fo:  # creates file with same hash lines as input file and only variant lines without no calls
+					
 					for line in file:
 						line_list = line.split('\t')
+					
 						for i in no_calls_list:
+					
 							if i != len(line_list) - 1:
 								line_list = line_list[:i] + line_list[i+1:]
+					
 							else: 
 								line_list = line_list[:i] 
 								line_list[-1] = line_list[-1] + '\n'
@@ -331,7 +350,7 @@ class compareApp():
 
 				if '#CHROM' in line:
 
-					split_line = line.split('\t')
+					split_line = utilities.unquote(line).split('\t')
 
 					comp = True
 
@@ -354,7 +373,7 @@ class compareApp():
 
 					total += 1
 
-					split_line = line.split('\t')
+					split_line = utilities.unquote(line).split('\t')
 
 					include = True
 
@@ -381,22 +400,25 @@ class compareApp():
 
 			print('Total Variants: ' + str(total))
 
+
 		else:
 
 			ex_list = []
 			samp_list = []
 
-
 			for i in range(len(file)):  # iterates over every row
-				
-				if file[i].split('\t')[0] in samples:  # finds line with corresponding first sample ID
-					samp_list.append(file[i].split('\t')[1:])  # creates list with every genotype call for every variant for first isolate
+
+				line = utilities.unquote(file[i])
+				split_line = line.split('\t')[0] 
+
+				if split_line[0] in samples:  # finds line with corresponding first sample ID
+					samp_list.append(split_line[1:])  # creates list with every genotype call for every variant for first isolate
 					
 					if len(samples) == 1:
-						samp_list.append(file[i].split('\t')[1:])
+						samp_list.append(line.split('\t')[1:])
 
-				elif file[i].split('\t')[0] in ex_samples:
-					ex_list.append(file[i].split('\t')[1:])
+				elif split_line[0] in ex_samples:
+					ex_list.append(split_line[1:])
 			
 
 			if len(samp_list) != len(samples):
@@ -466,12 +488,14 @@ class sim_matrixApp():
 
 		if '##' in file[1]: # Checks if File is in VCF or Table format
 
-			for i in range(len(file)):  # creates dictionary with sample as key an allele sequence as value 	
+			for i in range(len(file)):  # creates dictionary with sample as key an allele sequence as value 
 
 				if "#CHROM" in file[i]:
+					line = utilities.unquote(file[i])
 					pos = i
-					for sample in file[i].split("\t")[9:]:
-						table[sample.strip()] = [0] * len(file[i].split("\t")[9:])
+
+					for sample in line.split("\t")[9:]:
+						table[sample.strip()] = [0] * len(line.split("\t")[9:])
 						samples.append(sample.strip())
 
 					break
@@ -482,9 +506,11 @@ class sim_matrixApp():
 
 			for i in range(num_samps):
 				sample = samples[i]
+
 				for j in range(pos+1, len(file)):
 					for k in range(num_samps):
-						if file[j].split("\t")[9+i].split(':')[0] == file[j].split("\t")[9+k].split(':')[0]:
+
+						if utilities.unquote(file[j]).split("\t")[9+i].split(':')[0] == utilities.unquote(file[j]).split("\t")[9+k].split(':')[0]:
 							table[sample][k] += 1
 
 			
@@ -492,19 +518,25 @@ class sim_matrixApp():
 				sim_table.append(list(map(lambda x : x / var_length, table[samp])))
 
 			with open(OutFile, "w") as fo:  # opens output file
-				fo.write(' ' + '\t' + '\t'.join(samples) + '\n')  # populates matrix column headers
+				fo.write(' ' + '\t' + utilities.unquote('\t'.join(samples)) + '\n')  # populates matrix column headers
+				
 				for x in range(len(sim_table)):           # populates matrix by row
 					temp = samples[x] 
+					
 					for y in range(len(sim_table[x])):
 						temp += '\t' + str(sim_table[x][y])
+					
 					fo.write(temp + '\n') 
 
 
 		else:
 
 			for line in file:  # creates dictionary with sample as key an allele sequence as value 
-				table[line.split("\t")[0]] = line.split("\t")[1:]
-				samples.append(line.split("\t")[0])  # also adds all samples to a list
+
+				temp = utilities.unquote(line)
+
+				table[temp.split("\t")[0]] = temp.split("\t")[1:]
+				samples.append(temp.split("\t")[0])  # also adds all samples to a list
 
 			num_samps = len(samples) 
 
@@ -532,6 +564,7 @@ class sim_matrixApp():
 				fo.write('\t'.join(samples) + '\n')  # populates matrix column headers
 				for x in range(len(sim_table)):           # populates matrix by row
 					temp = samples[x+1] 
+					
 					for y in range(len(sim_table[x])):
 						temp += '\t' + str(sim_table[x][y])
 					fo.write(temp + '\n') 
