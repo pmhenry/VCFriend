@@ -1,7 +1,6 @@
 # VCFriend
 
-DESCRIPTION:
-	Variant calling softwares utilizes VCF files that can sometimes be difficult to parse. VCFriend is a set of tools that can make analyzing and extracting information from VCF files easier.
+Variant calling softwares utilizes VCF files that can sometimes be difficult to parse. VCFriend is a set of tools that can make analyzing and extracting information from VCF files easier.
 	
 ---
 
