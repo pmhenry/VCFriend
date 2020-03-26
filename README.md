@@ -4,10 +4,10 @@ Variant calling softwares utilizes VCF files that can sometimes be difficult to 
 	
 ---
 
-USAGE:
+Usage:
 	VCFriend.py [FUNCTION] [OPTIONS]
 	
-FUNCTIONS: remove, matrix, pat-match, clear, compare, sim-matrix, and allele-seq
+Functions: remove, matrix, pat-match, clear, compare, sim-matrix, and allele-seq
   
    REMOVE:
 	Removes samples from a VCF or Variant Matrix file.	
