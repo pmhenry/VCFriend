@@ -3,13 +3,13 @@
 Variant calling softwares utilizes VCF files that can sometimes be difficult to parse. VCFriend is a set of tools that can make analyzing and extracting information from VCF files easier.
 	
 ---
-Installation:
+##Installation:
 	
 	git clone https://github.com/bnjenner/VCFriend.git
 	echo "path/to/repo/" >> ~/.bash_profile # or equivalent 
 	source ~/.bash_profile
 	
-Check:
+Check Installation:
 
 	VCFriend.py -h # help page means installation was successful.
 
