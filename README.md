@@ -9,7 +9,9 @@ Installation:
 	echo "path/to/repo/" >> ~/.bash_profile # or equivalent 
 	source ~/.bash_profile
 	
-Run "VCFriend.py -h" to test installation.
+Check:
+
+	VCFriend.py -h # help page means installation was successful.
 
 ---
 
