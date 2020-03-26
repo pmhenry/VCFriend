@@ -20,7 +20,9 @@ Functions: remove, matrix, pat-match, clear, compare, sim-matrix, and allele-seq
 	-s [ --sample ]		Comma separated list of ID of Samples to be removed
 
 	-o [ --output ] 	Name of Output File
-	
+
+---
+
   MATRIX:
 	VCF file simplification. Generates variant matrix (tab delimited text file) containing only genotype data. Samples are rows and variants are columns. 
 
@@ -46,6 +48,8 @@ Functions: remove, matrix, pat-match, clear, compare, sim-matrix, and allele-seq
 
 	-o [ --output ] 	Name of Output File
 
+---
+
   PAT-MATCH:
 	Searches VCF file or variant matrix (matrix output) for patterns of presence/absence for variants among genomes. Returns file with list of variants matching the designated pattern ofpresence/absence. For patterns, 1's indicate that variant must be present in given genoms while 0's indicate absence. N's exclude the genome from the pattern match. N's in pattern mean sample is ignored. Y's require that a genotype call is made for the sample. .'s correspond to no genotype calls in the VCF.
 
@@ -56,6 +60,8 @@ Functions: remove, matrix, pat-match, clear, compare, sim-matrix, and allele-seq
 
 	-o [ --output ] 	Name of Output File
 
+---
+
   CLEAR:
 	Removes variants for which a genotype could not be made for all samples in VCF or Table file. Returns new VCF/Matrix file without specified sample.
 
@@ -63,6 +69,8 @@ Functions: remove, matrix, pat-match, clear, compare, sim-matrix, and allele-seq
 	-i [ --input ] 		Input VCF or Matrix
 
 	-o [ --output ] 	Name of Output File		
+
+---
 
   COMPARE:
 	Returns the number of variants shared between any number of samples excluding 0 or more samples in VCF files or variant matrix (vcf_mat output). Function is phase sensitive for genotypes.
@@ -76,6 +84,8 @@ Functions: remove, matrix, pat-match, clear, compare, sim-matrix, and allele-seq
 
 	-o [ --output ]         Output list of shared variant names
 
+---
+
   SIM-MATRIX:
 	Returns similarity matrix for samples.
 
@@ -83,7 +93,9 @@ Functions: remove, matrix, pat-match, clear, compare, sim-matrix, and allele-seq
 	 -i [ --input ]          Input VCF or Matrix
 
 	 -o [ --output ]         Name of Output File
-    
+  
+---
+
   ALLELE-SEQ:
         Creates a multi-fasta file containing the sequence of all snp alleles for each sample in a VCF (haploid and snps only for now).
 
@@ -92,7 +104,7 @@ Functions: remove, matrix, pat-match, clear, compare, sim-matrix, and allele-seq
 
          -o [ --output ]         Name of Output Fasta File
 
-########################################
+---
 
 Last Updated: February 7th, 2020
 
