@@ -1,16 +1,16 @@
-####################
-VCFriend.py 
-####################
+# VCFriend.py 
+---
 
 DESCRIPTION:
 	Variant calling softwares utilizes VCF files that can sometimes be difficult to parse. VCFriend is a set of tools that can make analyzing and extracting information from VCF files easier.
 	
+
+---
+
 USAGE:
 	VCFriend.py [FUNCTION] [OPTIONS]
 	
 FUNCTIONS: remove, matrix, pat-match, clear, compare, sim-matrix, and allele-seq
-
----
   
    REMOVE:
 	Removes samples from a VCF or Variant Matrix file.	
