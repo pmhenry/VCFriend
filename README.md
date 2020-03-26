@@ -22,8 +22,6 @@ Functions: remove, matrix, pat-match, clear, compare, sim-matrix, and allele-seq
 
 	-o [ --output ] 	Name of Output File
 
----
-
   matrix:
   
 	VCF file simplification. Generates variant matrix (tab delimited text file) containing only genotype data. Samples are rows and variants are columns. 
@@ -50,7 +48,6 @@ Functions: remove, matrix, pat-match, clear, compare, sim-matrix, and allele-seq
 
 	-o [ --output ] 	Name of Output File
 
----
 
   pat-match:
   
@@ -63,7 +60,6 @@ Functions: remove, matrix, pat-match, clear, compare, sim-matrix, and allele-seq
 
 	-o [ --output ] 	Name of Output File
 
----
 
   clear:
   
@@ -74,7 +70,6 @@ Functions: remove, matrix, pat-match, clear, compare, sim-matrix, and allele-seq
 
 	-o [ --output ] 	Name of Output File		
 
----
 
   compare:
   
@@ -89,7 +84,6 @@ Functions: remove, matrix, pat-match, clear, compare, sim-matrix, and allele-seq
 
 	-o [ --output ]         Output list of shared variant names
 
----
 
   sim-matrix:
   
@@ -100,7 +94,6 @@ Functions: remove, matrix, pat-match, clear, compare, sim-matrix, and allele-seq
 
 	 -o [ --output ]         Name of Output File
   
----
 
   allele-seq:
   
