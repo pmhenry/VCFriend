@@ -9,14 +9,11 @@ Variant calling softwares utilizes VCF files that can sometimes be difficult to 
 	source ~/.bash_profile
 	VCFriend.py -h # help page means installation was successful.
 
----
 ## Usage 
 
 VCFriend.py [FUNCTION] [OPTIONS]
 	
-Functions: remove, matrix, pat-match, clear, compare, sim-matrix, and allele-seq
-  
----
+## Functions
 
    remove:
    
