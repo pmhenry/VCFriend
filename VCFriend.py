@@ -30,7 +30,10 @@ class utilities():
 		return string 
 
 
-	def pat_match(pattern, text):  #  matching algorithm, returns either '1' (match) or '0' (no match) 
+	#  matching algorithm, returns either '1' (match) or '0' (no match) 
+	def pat_match(pattern, text):  
+
+			pattern = pattern.split(",")
 
 			for i in range(len(pattern)):  #  compares pattern and text by individual characters
 				match = True
@@ -50,7 +53,7 @@ class utilities():
 
 
 ######################################################################
-# Apps
+# Applications
 
 ###############
 # remove
@@ -74,7 +77,7 @@ class removeApp():
 
 		samp_list = Sample.split(',')
 
-		with open(InFile, 'r') as fi:  # read in VCF file 
+		with open(InFile, 'r') as fi: # reads in VCF / matrix
 			file = fi.readlines()
 
 
@@ -189,7 +192,7 @@ class pat_matchApp():
 			raise Exception('*Name for Output File Required*')
 
 
-		with open(InFile, 'r') as fi:
+		with open(InFile, 'r') as fi: # reads in VCF / matrix
 			file = fi.readlines()
 
 
@@ -243,7 +246,7 @@ class cleanApp():
 
 		var_lines =[]
 
-		with open(InFile, 'r') as fi: # reads in VCF table file 
+		with open(InFile, 'r') as fi: # reads in VCF / matrix
 			file = fi.readlines() 
 
 		with open(OutFile, 'w') as fo:  # creates file with same hash lines as input file and only variant lines without no calls
@@ -335,7 +338,7 @@ class compareApp():
 		sim_list = []
 
 
-		with open(InFile, 'r') as fi: # reads in VCF table from vat_mat command 
+		with open(InFile, 'r') as fi: # reads in VCF / matrix
 			file = fi.readlines()
 
 
@@ -482,7 +485,7 @@ class sim_matrixApp():
 		samples = []
 		sim_table = []
 
-		with open(InFile, "r") as fi:  # reads in vcf matrix
+		with open(InFile, "r") as fi:  # reads in vcf / matrix
 			file = fi.readlines()
 
 
@@ -508,6 +511,7 @@ class sim_matrixApp():
 				sample = samples[i]
 
 				for j in range(pos+1, len(file)):
+					
 					for k in range(num_samps):
 
 						if utilities.unquote(file[j]).split("\t")[9+i].split(':')[0] == utilities.unquote(file[j]).split("\t")[9+k].split(':')[0]:
@@ -542,31 +546,40 @@ class sim_matrixApp():
 
 			for i in range(num_samps - 1):  # populates the distance matrix with 0's to the propper dimensions
 				sim_table.append([])
+				
 				for j in range(num_samps - 1):
 					sim_table[i].append("0")
 
 			for x in range(1, num_samps):  # iterates over columns
+				
 				for y in range(1, num_samps): # iterates over columns for comparison
 					sim = 0
 					samp_1 = table[samples[x]]
 					samp_2 = table[samples[y]]
+					
 					if len(samp_1) >= len(samp_2):  # choses shortest allele sequence
 						length = len(samp_1)
+					
 					else:
 						length = len(samp_2)
+					
 					for c in range(length):
+					
 						if samp_1[c] == samp_2[c]:  # for each match in allele sequences, similarity count increases
 							sim += 1
+					
 					perc_sim = sim / (( len(samp_1) + len(samp_2) ) / 2 )  # percent similarity formula
 					sim_table[x-1][y-1] = perc_sim  # adds above value to correct spot in matrix
 
 			with open(OutFile, "w") as fo:  # opens output file
 				fo.write('\t'.join(samples) + '\n')  # populates matrix column headers
+				
 				for x in range(len(sim_table)):           # populates matrix by row
 					temp = samples[x+1] 
 					
 					for y in range(len(sim_table[x])):
 						temp += '\t' + str(sim_table[x][y])
+					
 					fo.write(temp + '\n') 
 
 ###############
@@ -631,6 +644,7 @@ class allele_seqApp():
 
 
 #####################################################################################
+# Application Subparsers
 
 ###############
 # remove
@@ -779,9 +793,7 @@ class allele_seqCMD():
    		return app.start(args.InFile, args.OutFile)
 
 #####################################################################################
-
-###############
-# argument parser
+# Program Parser
 
 def parseArgs():
     parser = argparse.ArgumentParser(
