@@ -538,9 +538,11 @@ class sim_matrixApp():
 			for line in file:  # creates dictionary with sample as key an allele sequence as value 
 
 				temp = utilities.unquote(line)
+				temp_split = temp.split("\t")
 
-				table[temp.split("\t")[0]] = temp.split("\t")[1:]
-				samples.append(temp.split("\t")[0])  # also adds all samples to a list
+
+				table[temp_split[0]] = temp_split[1:]
+				samples.append(temp_split[0])  # also adds all samples to a list
 
 			num_samps = len(samples) 
 
@@ -570,6 +572,7 @@ class sim_matrixApp():
 					
 					perc_sim = sim / (( len(samp_1) + len(samp_2) ) / 2 )  # percent similarity formula
 					sim_table[x-1][y-1] = perc_sim  # adds above value to correct spot in matrix
+
 
 			with open(OutFile, "w") as fo:  # opens output file
 				fo.write('\t'.join(samples) + '\n')  # populates matrix column headers
@@ -608,7 +611,7 @@ class allele_seqApp():
 
 				if "#CHROM" in line:
 
-					samples = line.split("\t")[9:] # samples list
+					samples = utilities.unquote(line).split("\t")[9:] # samples list
 					sequences = [""] * len(samples) # empty sequence list
 
 				elif "#" not in line and len(samples) != 0:
@@ -632,14 +635,14 @@ class allele_seqApp():
 						else:
 
 							alt = int(allele) - 1
-							sequences[i - 9] += utilities.unquote(temp[4].split(',')[alt])
+							sequences[i - 9] += utilities.unquote(temp[4]).split(',')[alt]
 
 
 			with open(OutFile, "w") as fo: # writes to output multifasta
 
 				for i in range(len(samples)):
 							
-					fo.write(">" + utilities.unquote(samples[i].strip()) + "\n")
+					fo.write(">" + samples[i].strip() + "\n")
 					fo.write(sequences[i].strip() + "\n")
 
 
