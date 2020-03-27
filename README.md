@@ -103,7 +103,7 @@ VCFriend.py [FUNCTION] [OPTIONS]
 
   allele-seq:
   
-        Creates a multi-fasta file containing the sequence of all snp alleles for each sample in a VCF (haploid and snps only for now).
+       Creates a multi-fasta file containing the sequence of all snp alleles for each sample in a VCF (haploid and snps only for now).
 
         OPTIONS:
          -i [ --input ]          Input VCF
