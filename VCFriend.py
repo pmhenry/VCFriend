@@ -800,7 +800,7 @@ class allele_seqCMD():
 
 def parseArgs():
     parser = argparse.ArgumentParser(
-        description='Miscellaneous functions for manipulating and analyzing VCF files.', add_help=True,
+        description='Functions for manipulating and analyzing VCF files.', add_help=True,
         epilog="For questions or comments, contact Bradley Jenner <bnjenner@ucdavis.edu>")
     subparsers = parser.add_subparsers(help='commands', dest='command')
     removeParser(subparsers)
