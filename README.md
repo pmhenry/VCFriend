@@ -96,9 +96,9 @@ VCFriend.py [FUNCTION] [OPTIONS]
 	Returns similarity matrix for samples.
 
 	OPTIONS:
-	 -i [ --input ]          Input VCF or Matrix
+	-i [ --input ]          Input VCF or Matrix
 
-	 -o [ --output ]         Name of Output File
+	-o [ --output ]         Name of Output File
   
 
   allele-seq:
