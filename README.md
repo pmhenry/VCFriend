@@ -67,7 +67,7 @@ VCFriend.py [FUNCTION] [OPTIONS]
 	-o [ --output ] 	Name of Output File
 
 
-  clear:
+  clean:
   
 	Removes variants for which a genotype could not be made for all samples in VCF or Table file. Returns new VCF/Matrix file without specified sample.
 

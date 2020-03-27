@@ -227,9 +227,9 @@ class pat_matchApp():
 
 
 ###############
-# clear
+# clean
 
-class clearApp():
+class cleanApp():
 
 	def __init__(self):
 		self.verbose = False
@@ -697,23 +697,23 @@ class pat_matchCMD():
    		return app.start(args.InFile, args.Pattern, args.OutFile)
 
 ###############
-# clear
+# clean
  
-def clearParser(subparsers):
-	clear_parser = subparsers.add_parser('clear',
+def cleanParser(subparsers):
+	clean_parser = subparsers.add_parser('clean',
 		help='Removes all variants from VCF files or a Variant Matrix where a genotype call could not be made for any isolate')
-	clear_parser.add_argument('-i', '--input', help='VCF or Table file', dest='InFile', type=str, default='Error1')
-	clear_parser.add_argument('-o', '--output', help='Name of output table', dest='OutFile', type=str, default='Error2')
+	clean_parser.add_argument('-i', '--input', help='VCF or Table file', dest='InFile', type=str, default='Error1')
+	clean_parser.add_argument('-o', '--output', help='Name of output table', dest='OutFile', type=str, default='Error2')
 	
-	return clear_parser
+	return clean_parser
 
-class clearCMD():
+class cleanCMD():
 
 	def __init__(self):
 		pass
 
 	def execute(self, args):
-   		app = clearApp()
+   		app = cleanApp()
    		return app.start(args.InFile, args.OutFile)
 
 ###############
@@ -791,7 +791,7 @@ def parseArgs():
     removeParser(subparsers)
     matrixParser(subparsers)
     pat_matchParser(subparsers)
-    clearParser(subparsers)
+    cleanParser(subparsers)
     compareParser(subparsers)
     sim_matrixParser(subparsers)
     allele_seqParser(subparsers)
@@ -802,14 +802,14 @@ def main():
 	remove = removeCMD()
 	matrix = matrixCMD()
 	pat_match = pat_matchCMD()
-	clear = clearCMD()
+	clean = cleanCMD()
 	compare = compareCMD()
 	sim_matrix = sim_matrixCMD()
 	allele_seq = allele_seqCMD()
-	commands = {'remove': remove, 'matrix': matrix, # remove, matrix
-				'pat-match': pat_match, 'clear': clear, # pat-match, clear
-				'compare': compare , 'sim-matrix': sim_matrix, # compare, sim-matrix
-				'allele-seq': allele_seq} # allele-seq
+	commands = {'remove': remove, 'matrix': matrix, 
+				'pat-match': pat_match, 'clean': clean,
+				'compare': compare , 'sim-matrix': sim_matrix, 
+				'allele-seq': allele_seq} 
 	args = parseArgs()
 	commands[args.command].execute(args)
 	
