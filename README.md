@@ -17,16 +17,39 @@ VCFriend.py [FUNCTION] [OPTIONS]
 
 ## Functions
 
-   remove:
-   
-	Removes samples from a VCF or Variant Matrix file.	
-  	
+  allele-seq:
+
+	Creates a multi-fasta file containing the sequence of all snp alleles for each sample in a VCF (haploid and snps only for now).
+
 	OPTIONS:
-	-i [ --input ] 		Input VCF or Matrix File
+	-i [ --input ]          Input VCF
+	
+	-o [ --output ]         Name of Output Fasta File
 
-	-s [ --sample ]		Comma separated list of ID of Samples to be removed
 
-	-o [ --output ] 	Name of Output File
+  clean:
+  
+	Removes variants for which a genotype could not be made for all samples in VCF or Table file. Returns new VCF/Matrix file without specified sample.
+
+	OPTIONS:
+	-i [ --input ] 		Input VCF or Matrix
+
+	-o [ --output ] 	Name of Output File		
+
+
+  compare:
+  
+	Returns the number of variants shared between any number of samples excluding 0 or more samples in VCF files or variant matrix (vcf_mat output). Function is phase sensitive for genotypes.
+
+	OPTIONS:
+	-i [ --input ] 		Input VCF File or Matrix
+
+	-s [ --samples ]	List of samples to compare separated by commas 
+
+	-x [ --exclude ]	List of samples to exclude from comparison separated by commas
+
+	-o [ --output ]         Output list of shared variant names
+
 
   matrix:
   
@@ -67,28 +90,16 @@ VCFriend.py [FUNCTION] [OPTIONS]
 	-o [ --output ] 	Name of Output File
 
 
-  clean:
-  
-	Removes variants for which a genotype could not be made for all samples in VCF or Table file. Returns new VCF/Matrix file without specified sample.
-
+   remove:
+   
+	Removes samples from a VCF or Variant Matrix file.	
+  	
 	OPTIONS:
-	-i [ --input ] 		Input VCF or Matrix
+	-i [ --input ] 		Input VCF or Matrix File
 
-	-o [ --output ] 	Name of Output File		
+	-s [ --sample ]		Comma separated list of ID of Samples to be removed
 
-
-  compare:
-  
-	Returns the number of variants shared between any number of samples excluding 0 or more samples in VCF files or variant matrix (vcf_mat output). Function is phase sensitive for genotypes.
-
-	OPTIONS:
-	-i [ --input ] 		Input VCF File or Matrix
-
-	-s [ --samples ]	List of samples to compare separated by commas 
-
-	-x [ --exclude ]	List of samples to exclude from comparison separated by commas
-
-	-o [ --output ]         Output list of shared variant names
+	-o [ --output ] 	Name of Output File
 
 
   sim-matrix:
@@ -100,16 +111,6 @@ VCFriend.py [FUNCTION] [OPTIONS]
 
 	-o [ --output ]         Name of Output File
   
-
-  allele-seq:
-
-	Creates a multi-fasta file containing the sequence of all snp alleles for each sample in a VCF (haploid and snps only for now).
-
-	OPTIONS:
-	-i [ --input ]          Input VCF
-	
-	-o [ --output ]         Name of Output Fasta File
-
 ---
 
 Last Updated: March 26th, 2020
