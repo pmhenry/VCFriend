@@ -131,7 +131,7 @@ def removeParser(subparsers):
 	remove_parser = subparsers.add_parser('remove', 
 		help=' Removes samples from a VCF or Variant Matrix file.')
 	remove_parser.add_argument('-i', '--input', help='VCF or Table file', dest='InFile', type=str, default='Error1')
-	remove_parser.add_argument('-s', '--sample', help='Comma separated list of samples in quotes', dest='Sample', type=str, default='Error2')
+	remove_parser.add_argument('-s', '--samples', help='Comma separated list of samples or or text file with a sample on each line.', dest='Samples', type=str, default='Error2')
 	remove_parser.add_argument('-o', '--output', help='Name of output VCF', dest='OutFile', type=str, default='Error3')
 	
 	return remove_parser
@@ -143,7 +143,7 @@ class removeCMD():
 
 	def execute(self, args):
    		app = remove.removeApp()
-   		return app.start(args.InFile, args.Sample, args.OutFile)
+   		return app.start(args.InFile, args.Samples, args.OutFile)
 
 
 ###############

@@ -97,7 +97,7 @@ VCFriend.py [FUNCTION] [OPTIONS]
 	OPTIONS:
 	-i [ --input ] 		Input VCF or Matrix File
 
-	-s [ --sample ]		Comma separated list of ID of Samples to be removed
+	-s [ --sample ]		Comma separated list of ID of Samples to be removed or text file with a sample on each line
 
 	-o [ --output ] 	Name of Output File
 

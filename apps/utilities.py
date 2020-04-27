@@ -8,7 +8,7 @@ def unquote(string):
 	if "\'" in string:
 		string = string.replace('\'', '')
 
-	return string 
+	return string
 
 
 #  matching algorithm, returns either '1' (match) or '0' (no match) 
