@@ -115,4 +115,4 @@ VCFriend.py [FUNCTION] [OPTIONS]
 
 Last Updated: March 26th, 2020
 
-For comments of questions, please contact Bradley Jenner <bnjenner@ucdavis.edu>
+For comments of questions, please contact Bradley Jenner <bnjenner@ucdavis.edu> or Peter Henry <peter.henry@usda.gov>
